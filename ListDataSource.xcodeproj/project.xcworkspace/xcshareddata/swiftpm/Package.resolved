@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SnapKit",
+        "repositoryURL": "https://github.com/SnapKit/SnapKit.git",
+        "state": {
+          "branch": null,
+          "revision": "d458564516e5676af9c70b4f4b2a9178294f1bc6",
+          "version": "5.0.1"
+        }
+      },
+      {
+        "package": "SwiftBrick",
+        "repositoryURL": "https://github.com/jackiehu/SwiftBrick.git",
+        "state": {
+          "branch": null,
+          "revision": "54ac8430a575c87915de1f15331adc7dff9393ee",
+          "version": "1.8.7"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
