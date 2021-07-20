@@ -8,46 +8,52 @@
 
 import UIKit
 
-open class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObject, UICollectionViewDataSource{
+public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObject, UICollectionViewDataSource{
  
-    public typealias CellProvider  = (UICollectionView, IndexPath, ItemType) -> UICollectionViewCell
-    public typealias SupplementaryViewProvider = (UICollectionView, String, IndexPath) -> UICollectionReusableView?
-    public let cellProvider : CellProvider
-    public var supplementaryViewProvider: SupplementaryViewProvider?
+    public typealias CellHandle  = (UICollectionView, IndexPath, ItemType) -> UICollectionViewCell
+    public typealias ReusableViewHandle = (UICollectionView, String, IndexPath) -> UICollectionReusableView?
+    public let setCell : CellHandle
+    public var setReusableView: ReusableViewHandle?
     private weak var collectionView: UICollectionView?
     private let dataSource = DataSource<SectionType, ItemType>()
     
-    public required init(_ collectionView: UICollectionView, cellGetter: @escaping CellProvider ) {
-        self.cellProvider  = cellGetter
+    public required init(_ collectionView: UICollectionView, cellGetter: @escaping CellHandle ) {
+        self.setCell  = cellGetter
         self.collectionView = collectionView
         super.init()
         collectionView.dataSource = self
     }
-
-
  
     open func numberOfSections(in collectionView: UICollectionView) -> Int {
         return dataSource.numberOfSections()
     }
  
-    open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataSource.numberOfItems(in: section)
     }
  
-    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("cell nil")
         }
-        let cell = cellProvider (collectionView, indexPath, item)
+        let cell = setCell (collectionView, indexPath, item)
         return cell
     }
     
-    open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let view = supplementaryViewProvider?(collectionView, kind, indexPath) else {
+    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let view = setReusableView?(collectionView, kind, indexPath) else {
             return UICollectionReusableView()
         }
 
         return view
+    }
+
+}
+
+extension CollectionViewDataSource{
+    
+    public func setReusableView(_ callback:@escaping ReusableViewHandle) {
+        setReusableView = callback
     }
     
     public func itemId(for indexPath: IndexPath) -> ItemType? {

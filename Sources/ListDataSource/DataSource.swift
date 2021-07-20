@@ -20,7 +20,12 @@ class DataSource <SectionType: Hashable, ItemType: Hashable>{
     func numberOfItems(in section: Int) -> Int{
         return sections[section].elements.count
     }
-
+    
+    func sectionID(for section: Int) -> SectionType? {
+        let section = sections[section]
+        return section.sectionID
+    }
+    
     func itemID(for indexPath: IndexPath) -> ItemType? {
         guard 0..<sections.endIndex ~= indexPath.section else {
             return nil

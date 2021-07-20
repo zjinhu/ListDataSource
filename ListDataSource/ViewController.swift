@@ -10,6 +10,7 @@ import SwiftBrick
 
 struct Section: Hashable {
     var title : String
+    var xx: UIView?
 }
 
 struct Item: Hashable {
@@ -18,11 +19,17 @@ struct Item: Hashable {
 
 class ViewController: JHTableViewController {
 
-    lazy var dataSource = TableViewDataSource<Section, Item>(tableView!, cellGetter: { (tableView, indexPath, model) -> UITableViewCell in
+//    lazy var dataSource = TableViewDataSource<Section, Item>(tableView!, cellGetter: { (tableView, indexPath, model) -> UITableViewCell in
+//        let cell = tableView.dequeueReusableCell(JHTableViewCell.self)
+//        cell.textLabel?.text = model.name
+//        return cell
+//    })
+    
+    lazy var dataSource = TableViewDataSource<Section, Item>.init(tableView!, needDelegate: true) { tableView, indexPath, model in
         let cell = tableView.dequeueReusableCell(JHTableViewCell.self)
         cell.textLabel?.text = model.name
         return cell
-    })
+    }
     
     var shot = DataSourceSnapshot<Section,Item>()
     
@@ -34,13 +41,32 @@ class ViewController: JHTableViewController {
             self.shot.deleteAllItems()
             self.dataSource.apply(self.shot)
         })
-
+        
+        dataSource.setHeaderView { tableView, index, sectionModel in
+            let view = UIView()
+            if sectionModel.title == "1"{
+                view.backgroundColor = .red
+            }else{
+                view.backgroundColor = .yellow
+            }
+            return view
+        }
+        
+        dataSource.setHeightForHeader { tableView, index, sectionModel in
+            if sectionModel.title == "1"{
+                return 100
+            }else{
+                return 20
+            }
+        }
         
         shot.appendSections([Section(title: "1")])
         shot.appendItems([Item(name: "1"),Item(name: "11"),Item(name: "111"),Item(name: "1111")])
         dataSource.apply(shot)
 
-        
+        dataSource.didSelectRow { tableView, index, sectionModel in
+            print("index,\(index)")
+        }
         
         UIButton.snpButton(supView: view, backColor: .orange, title: "添加section", touchUp: { (_) in
             let sec = Section(title: "2")
@@ -79,12 +105,4 @@ class ViewController: JHTableViewController {
 
     }
     
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 20
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20
-    }
-
 }
