@@ -24,7 +24,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         collectionView.dataSource = self
     }
  
-    open func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return dataSource.numberOfSections()
     }
  
