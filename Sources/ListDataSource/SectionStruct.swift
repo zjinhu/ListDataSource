@@ -150,6 +150,9 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
         }
     }
 
+    mutating func removeAll() {
+        sections.removeAll()
+    }
 }
 
 private extension SectionStruct {

@@ -19,6 +19,8 @@
 		814072CB26A176EE00A4CAF9 /* SectionStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814072C626A176EE00A4CAF9 /* SectionStruct.swift */; };
 		814072CC26A176EE00A4CAF9 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814072C726A176EE00A4CAF9 /* DataSource.swift */; };
 		814072CF26A1776100A4CAF9 /* SwiftBrick in Frameworks */ = {isa = PBXBuildFile; productRef = 814072CE26A1776100A4CAF9 /* SwiftBrick */; };
+		81D53B1526AA7ACB002F5170 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D53B1426AA7ACB002F5170 /* CollectionViewController.swift */; };
+		81D53B1826AA7F51002F5170 /* SwiftMediator in Frameworks */ = {isa = PBXBuildFile; productRef = 81D53B1726AA7F51002F5170 /* SwiftMediator */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,7 @@
 		814072C526A176EE00A4CAF9 /* DataSourceSnapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceSnapshot.swift; sourceTree = "<group>"; };
 		814072C626A176EE00A4CAF9 /* SectionStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionStruct.swift; sourceTree = "<group>"; };
 		814072C726A176EE00A4CAF9 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
+		81D53B1426AA7ACB002F5170 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +46,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				814072CF26A1776100A4CAF9 /* SwiftBrick in Frameworks */,
+				81D53B1826AA7F51002F5170 /* SwiftMediator in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +76,7 @@
 				814072AE26A175E000A4CAF9 /* AppDelegate.swift */,
 				814072B026A175E000A4CAF9 /* SceneDelegate.swift */,
 				814072B226A175E000A4CAF9 /* ViewController.swift */,
+				81D53B1426AA7ACB002F5170 /* CollectionViewController.swift */,
 				814072B426A175E000A4CAF9 /* Main.storyboard */,
 				814072B726A175E400A4CAF9 /* Assets.xcassets */,
 				814072B926A175E400A4CAF9 /* LaunchScreen.storyboard */,
@@ -111,6 +116,7 @@
 			name = ListDataSource;
 			packageProductDependencies = (
 				814072CE26A1776100A4CAF9 /* SwiftBrick */,
+				81D53B1726AA7F51002F5170 /* SwiftMediator */,
 			);
 			productName = ListDataSource;
 			productReference = 814072AB26A175E000A4CAF9 /* ListDataSource.app */;
@@ -141,6 +147,7 @@
 			mainGroup = 814072A226A175E000A4CAF9;
 			packageReferences = (
 				814072CD26A1776100A4CAF9 /* XCRemoteSwiftPackageReference "SwiftBrick" */,
+				81D53B1626AA7F51002F5170 /* XCRemoteSwiftPackageReference "SwiftMediator" */,
 			);
 			productRefGroup = 814072AC26A175E000A4CAF9 /* Products */;
 			projectDirPath = "";
@@ -169,6 +176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81D53B1526AA7ACB002F5170 /* CollectionViewController.swift in Sources */,
 				814072CA26A176EE00A4CAF9 /* DataSourceSnapshot.swift in Sources */,
 				814072B326A175E000A4CAF9 /* ViewController.swift in Sources */,
 				814072C926A176EE00A4CAF9 /* TableViewDataSource.swift in Sources */,
@@ -386,6 +394,14 @@
 				minimumVersion = 1.8.7;
 			};
 		};
+		81D53B1626AA7F51002F5170 /* XCRemoteSwiftPackageReference "SwiftMediator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jackiehu/SwiftMediator.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -393,6 +409,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 814072CD26A1776100A4CAF9 /* XCRemoteSwiftPackageReference "SwiftBrick" */;
 			productName = SwiftBrick;
+		};
+		81D53B1726AA7F51002F5170 /* SwiftMediator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 81D53B1626AA7F51002F5170 /* XCRemoteSwiftPackageReference "SwiftMediator" */;
+			productName = SwiftMediator;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

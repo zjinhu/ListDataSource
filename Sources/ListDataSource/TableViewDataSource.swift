@@ -53,7 +53,7 @@ open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObj
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let item = dataSource.itemID(for: indexPath) else {
-            fatalError("cell nil")
+            fatalError("当前位置下的ItemType数据不存在")
         }
         let cell = setCell(tableView, indexPath, item)
         return cell
@@ -61,7 +61,7 @@ open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObj
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = dataSource.itemID(for: indexPath) else {
-            fatalError("cell nil")
+            fatalError("当前位置下的ItemType数据不存在")
         }
         didSelectRow?(tableView, indexPath, item)
     }

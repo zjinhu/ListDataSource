@@ -15,8 +15,17 @@
         "repositoryURL": "https://github.com/jackiehu/SwiftBrick.git",
         "state": {
           "branch": null,
-          "revision": "54ac8430a575c87915de1f15331adc7dff9393ee",
-          "version": "1.8.7"
+          "revision": "38c39de6eed703f1560927cd884e89233af3d089",
+          "version": "1.8.8"
+        }
+      },
+      {
+        "package": "SwiftMediator",
+        "repositoryURL": "https://github.com/jackiehu/SwiftMediator.git",
+        "state": {
+          "branch": null,
+          "revision": "8d078c83ca6ab62ee6b0ae786d0160445da6315f",
+          "version": "1.1.0"
         }
       }
     ]

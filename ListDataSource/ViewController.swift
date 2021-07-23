@@ -7,24 +7,20 @@
 
 import UIKit
 import SwiftBrick
+import SwiftMediator
 
 struct Section: Hashable {
     var title : String
-    var xx: UIView?
+    var color : UIColor?
 }
 
 struct Item: Hashable {
     var name : String
+    var color : UIColor?
 }
 
 class ViewController: JHTableViewController {
 
-//    lazy var dataSource = TableViewDataSource<Section, Item>(tableView!, cellGetter: { (tableView, indexPath, model) -> UITableViewCell in
-//        let cell = tableView.dequeueReusableCell(JHTableViewCell.self)
-//        cell.textLabel?.text = model.name
-//        return cell
-//    })
-    
     lazy var dataSource = TableViewDataSource<Section, Item>.init(tableView!, needDelegate: true) { tableView, indexPath, model in
         let cell = tableView.dequeueReusableCell(JHTableViewCell.self)
         cell.textLabel?.text = model.name
@@ -35,12 +31,15 @@ class ViewController: JHTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        addRightBarButton(text: "清空", normalColor: .darkGray, highlightColor: .lightGray, touchUp: { [weak self] _ in
-            guard let `self` = self else{return}
-            self.shot.deleteAllItems()
-            self.dataSource.apply(self.shot)
-        })
+        addButtons()
+        
+        tableViewConfig()
+    }
+    
+    func tableViewConfig(){
+        shot.appendSections([Section(title: "1")])
+        shot.appendItems([Item(name: "1"),Item(name: "11"),Item(name: "111"),Item(name: "1111")])
+        dataSource.apply(shot)
         
         dataSource.setHeaderView { tableView, index, sectionModel in
             let view = UIView()
@@ -60,13 +59,22 @@ class ViewController: JHTableViewController {
             }
         }
         
-        shot.appendSections([Section(title: "1")])
-        shot.appendItems([Item(name: "1"),Item(name: "11"),Item(name: "111"),Item(name: "1111")])
-        dataSource.apply(shot)
-
-        dataSource.didSelectRow { tableView, index, sectionModel in
+        dataSource.didSelectRow { tableView, index, model in
             print("index,\(index)")
         }
+    }
+    
+    func addButtons(){
+        
+        addLeftBarButton(text: "清空", normalColor: .darkGray, highlightColor: .lightGray) { [weak self] _ in
+            guard let `self` = self else{return}
+            self.shot.deleteAllItems()
+            self.dataSource.apply(self.shot)
+        }
+        
+        addRightBarButton(text: "跳转", normalColor: .darkGray, highlightColor: .lightGray, touchUp: { _ in
+            SwiftMediator.shared.push("CollectionViewController")
+        })
         
         UIButton.snpButton(supView: view, backColor: .orange, title: "添加section", touchUp: { (_) in
             let sec = Section(title: "2")
@@ -74,6 +82,7 @@ class ViewController: JHTableViewController {
 //            self.shot.insertSections([sec], beforeSection: Section(title: "1"))
             self.shot.appendItems([Item(name: "2"),Item(name: "3"),Item(name: "4"),Item(name: "5")], toSection: sec)
             self.dataSource.apply(self.shot)
+            
         }) { (m) in
             m.left.equalToSuperview()
             m.bottom.equalToSuperview().offset(-60)
@@ -102,7 +111,5 @@ class ViewController: JHTableViewController {
             m.height.equalTo(40)
         }
         
-
     }
-    
 }

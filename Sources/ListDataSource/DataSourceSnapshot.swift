@@ -83,4 +83,8 @@ public struct DataSourceSnapshot<SectionType: Hashable, ItemType: Hashable> {
     public mutating func deleteSections(_ identifiers: [SectionType]) {
         structer.remove(sectionIDs: identifiers)
     }
+    
+    public mutating func deleteAll() {
+        structer.removeAll()
+    }
 }
