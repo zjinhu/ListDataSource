@@ -10,22 +10,22 @@ import Foundation
 class DataSource <SectionType: Hashable, ItemType: Hashable>{
     
     typealias Section = SectionStruct<SectionType, ItemType>.Section
-    
+    ///构建数据源
     var sections: [Section] = []
-    
+    ///获取section个数------代理方法里用
     func numberOfSections() -> Int{
         return sections.count
     }
-
+    ///获取section中item个数------代理方法里用
     func numberOfItems(in section: Int) -> Int{
         return sections[section].elements.count
     }
-    
+    ///根据数字位置获取Section对象
     func sectionID(for section: Int) -> SectionType? {
         let section = sections[section]
         return section.sectionID
     }
-    
+    ///根据IndexPath获取item对象
     func itemID(for indexPath: IndexPath) -> ItemType? {
         guard 0..<sections.endIndex ~= indexPath.section else {
             return nil
@@ -39,7 +39,7 @@ class DataSource <SectionType: Hashable, ItemType: Hashable>{
 
         return items[indexPath.item].itemID
     }
-    
+    ///根据item获取其所在IndexPath
     func indexPath(for itemIdentifier: ItemType) -> IndexPath? {
         let indexPathMap: [ItemType: IndexPath] = sections.enumerated()
             .reduce(into: [:]) { result, section in

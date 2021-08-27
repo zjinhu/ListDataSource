@@ -20,7 +20,25 @@ struct Item: Hashable {
 }
 
 class ViewController: JHTableViewController {
-
+    let section1 = Section(title: "1")
+    let section2 = Section(title: "2")
+    
+    let item1 = Item(name: "1")
+    let item2 = Item(name: "2")
+    let item3 = Item(name: "3")
+    let item4 = Item(name: "4")
+    var item5 = Item(name: "5")
+    let item6 = Item(name: "1111")
+    let item7 = Item(name: "7")
+    let item8 = Item(name: "8")
+    let item9 = Item(name: "9")
+    
+    let item11 = Item(name: "11")
+    let item12 = Item(name: "12")
+    let item13 = Item(name: "13")
+    let item14 = Item(name: "14")
+    let item15 = Item(name: "15")
+    
     lazy var dataSource = TableViewDataSource<Section, Item>.init(tableView!, needDelegate: true) { tableView, indexPath, model in
         let cell = tableView.dequeueReusableCell(JHTableViewCell.self)
         cell.textLabel?.text = model.name
@@ -37,8 +55,13 @@ class ViewController: JHTableViewController {
     }
     
     func tableViewConfig(){
-        shot.appendSections([Section(title: "1")])
-        shot.appendItems([Item(name: "1"),Item(name: "11"),Item(name: "111"),Item(name: "1111")])
+        shot.appendSections([section1])
+        shot.appendItems([item1,
+                          item2,
+                          item3,
+                          item4,
+                          item5,
+                          item6])
         dataSource.apply(shot)
         
         dataSource.setHeaderView { tableView, index, sectionModel in
@@ -76,34 +99,11 @@ class ViewController: JHTableViewController {
             SwiftMediator.shared.push("CollectionViewController")
         })
         
-        UIButton.snpButton(supView: view, backColor: .orange, title: "添加section", touchUp: { (_) in
-            let sec = Section(title: "2")
-            self.shot.appendSections([sec])
-//            self.shot.insertSections([sec], beforeSection: Section(title: "1"))
-            self.shot.appendItems([Item(name: "2"),Item(name: "3"),Item(name: "4"),Item(name: "5")], toSection: sec)
-            self.dataSource.apply(self.shot)
+        
+        UIButton.snpButton(supView: view, backColor: .orange, title: "列表操作", touchUp: { (_) in
             
-        }) { (m) in
-            m.left.equalToSuperview()
-            m.bottom.equalToSuperview().offset(-60)
-            m.width.equalTo(100)
-            m.height.equalTo(40)
-        }
-        
-        UIButton.snpButton(supView: view, backColor: .orange, title: "s1添加元素", touchUp: { (_) in
-            self.shot.appendItems([Item(name: "6"),Item(name: "7"),Item(name: "8"),Item(name: "9")], toSection: Section(title: "1"))
-//            self.shot.insertItems([Item(name: "6"),Item(name: "7"),Item(name: "8"),Item(name: "9")], beforeItem: Item(name: "11"))
-            self.dataSource.apply(self.shot)
-        }) { (m) in
-            m.right.equalToSuperview()
-            m.bottom.equalToSuperview().offset(-60)
-            m.width.equalTo(100)
-            m.height.equalTo(40)
-        }
-        
-        UIButton.snpButton(supView: view, backColor: .orange, title: "删s1中的1111", touchUp: { (_) in
-            self.shot.deleteItems([Item(name: "1111")])
-            self.dataSource.apply(self.shot)
+            self.addAction()
+            
         }) { (m) in
             m.centerX.bottom.equalToSuperview()
             m.bottom.equalToSuperview().offset(-60)
@@ -111,5 +111,56 @@ class ViewController: JHTableViewController {
             m.height.equalTo(40)
         }
         
+        
+        
+    }
+    
+    func addAction(){
+        let optionMenu = UIAlertController(title: nil, message: "列表操作", preferredStyle: .actionSheet)
+
+        let action1 = UIAlertAction(title: "添加section", style: .default, handler:{ (alert: UIAlertAction!) -> Void in
+            self.shot.appendSections([self.section2])
+
+            self.shot.appendItems([self.item11,
+                                   self.item12,
+                                   self.item13,
+                                   self.item14,
+                                   self.item15], toSection: self.section2)
+            self.dataSource.apply(self.shot)
+        })
+
+        let action2 = UIAlertAction(title: "s1添加元素", style: .default, handler:{(alert: UIAlertAction!) -> Void in
+            self.shot.appendItems([self.item7,
+                                   self.item8,
+                                   self.item9], toSection: self.section1)
+
+            self.dataSource.apply(self.shot)
+        })
+
+        let action3 = UIAlertAction(title: "删s1中的1111", style: .default, handler:{(alert: UIAlertAction!) -> Void in
+            self.shot.deleteItems([self.item6])
+            self.dataSource.apply(self.shot)
+        })
+        
+        let action4 = UIAlertAction(title: "更改编号5为100", style: .default, handler:{(alert: UIAlertAction!) -> Void in
+//
+//
+//            print("\(self.item5.hashValue)")
+//
+//            self.item5.name = "100"
+//
+//            print("\(self.item5.hashValue)")
+            
+            var array = self.shot.itemIdentifiers(inSection: self.section1)
+            print("\(array[4].hashValue),\(array[4].name)")
+            array[4].name = "100"
+            print("\(array[4].hashValue),\(array[4].name)")
+            self.dataSource.apply(self.shot)
+        })
+        optionMenu.addAction(action1)
+        optionMenu.addAction(action2)
+        optionMenu.addAction(action3)
+        optionMenu.addAction(action4)
+        self.present(optionMenu, animated: true, completion: nil)
     }
 }

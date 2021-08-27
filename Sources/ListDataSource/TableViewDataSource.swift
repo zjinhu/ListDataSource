@@ -55,6 +55,7 @@ open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObj
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("当前位置下的ItemType数据不存在")
         }
+        print("\(dataSource.sections)")
         let cell = setCell(tableView, indexPath, item)
         return cell
     }
