@@ -19,6 +19,7 @@
 		814072CB26A176EE00A4CAF9 /* SectionStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814072C626A176EE00A4CAF9 /* SectionStruct.swift */; };
 		814072CC26A176EE00A4CAF9 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814072C726A176EE00A4CAF9 /* DataSource.swift */; };
 		814072CF26A1776100A4CAF9 /* SwiftBrick in Frameworks */ = {isa = PBXBuildFile; productRef = 814072CE26A1776100A4CAF9 /* SwiftBrick */; };
+		8155629B26E2154500DFEADB /* Diff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8155629A26E2154500DFEADB /* Diff.swift */; };
 		81D53B1526AA7ACB002F5170 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D53B1426AA7ACB002F5170 /* CollectionViewController.swift */; };
 		81D53B1826AA7F51002F5170 /* SwiftMediator in Frameworks */ = {isa = PBXBuildFile; productRef = 81D53B1726AA7F51002F5170 /* SwiftMediator */; };
 /* End PBXBuildFile section */
@@ -37,6 +38,7 @@
 		814072C526A176EE00A4CAF9 /* DataSourceSnapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceSnapshot.swift; sourceTree = "<group>"; };
 		814072C626A176EE00A4CAF9 /* SectionStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionStruct.swift; sourceTree = "<group>"; };
 		814072C726A176EE00A4CAF9 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
+		8155629A26E2154500DFEADB /* Diff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diff.swift; sourceTree = "<group>"; };
 		81D53B1426AA7ACB002F5170 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -93,6 +95,7 @@
 				814072C526A176EE00A4CAF9 /* DataSourceSnapshot.swift */,
 				814072C626A176EE00A4CAF9 /* SectionStruct.swift */,
 				814072C726A176EE00A4CAF9 /* DataSource.swift */,
+				8155629A26E2154500DFEADB /* Diff.swift */,
 			);
 			name = ListDataSource;
 			path = Sources/ListDataSource;
@@ -182,6 +185,7 @@
 				814072C926A176EE00A4CAF9 /* TableViewDataSource.swift in Sources */,
 				814072AF26A175E000A4CAF9 /* AppDelegate.swift in Sources */,
 				814072B126A175E000A4CAF9 /* SceneDelegate.swift in Sources */,
+				8155629B26E2154500DFEADB /* Diff.swift in Sources */,
 				814072C826A176EE00A4CAF9 /* CollectionViewDataSource.swift in Sources */,
 				814072CC26A176EE00A4CAF9 /* DataSource.swift in Sources */,
 				814072CB26A176EE00A4CAF9 /* SectionStruct.swift in Sources */,

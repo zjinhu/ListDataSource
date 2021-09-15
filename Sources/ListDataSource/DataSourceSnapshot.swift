@@ -72,6 +72,18 @@ public struct DataSourceSnapshot<SectionType: Hashable, ItemType: Hashable> {
         
     }
     
+    public mutating func reloadItems(_ identifiers: [ItemType]) {
+        structer.update(itemIDs: identifiers)
+    }
+
+    public mutating func moveItem(_ identifier: ItemType, beforeItem toIdentifier: ItemType) {
+        structer.move(itemID: identifier, before: toIdentifier)
+    }
+
+    public mutating func moveItem(_ identifier: ItemType, afterItem toIdentifier: ItemType) {
+        structer.move(itemID: identifier, after: toIdentifier)
+    }
+    
     ///删除所有item---section还存在,内部数据为空
     public mutating func deleteAllItems() {
         structer.removeAllItems()
@@ -103,5 +115,17 @@ public struct DataSourceSnapshot<SectionType: Hashable, ItemType: Hashable> {
     
     public mutating func updateSection(index: IndexPath, new: SectionType) {
         
+    }
+    
+    public mutating func moveSection(_ identifier: SectionType, beforeSection toIdentifier: SectionType) {
+        structer.move(sectionID: identifier, before: toIdentifier)
+    }
+
+    public mutating func moveSection(_ identifier: SectionType, afterSection toIdentifier: SectionType) {
+        structer.move(sectionID: identifier, after: toIdentifier)
+    }
+    
+    public mutating func reloadSections(_ identifiers: [SectionType]) {
+        structer.update(sectionIDs: identifiers)
     }
 }

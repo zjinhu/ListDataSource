@@ -10,6 +10,10 @@ import Foundation
 class DataSource <SectionType: Hashable, ItemType: Hashable>{
     
     typealias Section = SectionStruct<SectionType, ItemType>.Section
+    
+    ////添加apply方法处理diff逻辑,判断哪些数据需要刷新
+    
+    
     ///构建数据源
     var sections: [Section] = []
     ///获取section个数------代理方法里用

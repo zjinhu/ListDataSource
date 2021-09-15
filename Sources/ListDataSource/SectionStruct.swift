@@ -42,9 +42,9 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
             .map { $0.itemID }
     }
     
-    func items(in sectionID: SectionID, file: StaticString = #file, line: UInt = #line) -> [ItemID] {
+    func items(in sectionID: SectionID) -> [ItemID] {
         guard let sectionIndex = sectionIndex(of: sectionID) else {
-            sectionIsNotFound(sectionID, file: file, line: line)
+            sectionIsNotFound(sectionID)
         }
 
         return sections[sectionIndex].elements.map { $0.itemID }
@@ -54,19 +54,19 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
         return itemPositionMap()[itemID]?.section.sectionID
     }
     
-    mutating func append(itemIDs: [ItemID], to sectionID: SectionID? = nil, file: StaticString = #file, line: UInt = #line) {
+    mutating func append(itemIDs: [ItemID], to sectionID: SectionID? = nil) {
          let index: Array<Section>.Index
 
          if let sectionID = sectionID {
              guard let sectionIndex = sectionIndex(of: sectionID) else {
-                 sectionIsNotFound(sectionID, file: file, line: line)
+                 sectionIsNotFound(sectionID)
              }
 
              index = sectionIndex
          }
          else {
              guard !sections.isEmpty else {
-                 noSections(file: file, line: line)
+                 noSections()
              }
 
              index = sections.index(before: sections.endIndex)
@@ -76,18 +76,18 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
          sections[index].elements.append(contentsOf: items)
      }
 
-     mutating func insert(itemIDs: [ItemID], before beforeItemID: ItemID, file: StaticString = #file, line: UInt = #line) {
+     mutating func insert(itemIDs: [ItemID], before beforeItemID: ItemID) {
          guard let itemPosition = itemPositionMap()[beforeItemID] else {
-             itemIsNotFound(beforeItemID, file: file, line: line)
+             itemIsNotFound(beforeItemID)
          }
 
          let items = itemIDs.lazy.map(Item.init)
          sections[itemPosition.sectionIndex].elements.insert(contentsOf: items, at: itemPosition.itemRelativeIndex)
      }
 
-     mutating func insert(itemIDs: [ItemID], after afterItemID: ItemID, file: StaticString = #file, line: UInt = #line) {
+     mutating func insert(itemIDs: [ItemID], after afterItemID: ItemID) {
          guard let itemPosition = itemPositionMap()[afterItemID] else {
-             itemIsNotFound(afterItemID, file: file, line: line)
+             itemIsNotFound(afterItemID)
          }
 
          let itemIndex = sections[itemPosition.sectionIndex].elements.index(after: itemPosition.itemRelativeIndex)
@@ -120,23 +120,60 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
          }
      }
     
+    mutating func move(itemID: ItemID, before beforeItemID: ItemID) {
+        guard let removed = remove(itemID: itemID) else {
+            itemIsNotFound(itemID)
+        }
+
+        guard let itemPosition = itemPositionMap()[beforeItemID] else {
+            itemIsNotFound(beforeItemID)
+        }
+
+        sections[itemPosition.sectionIndex].elements.insert(removed, at: itemPosition.itemRelativeIndex)
+    }
+
+    mutating func move(itemID: ItemID, after afterItemID: ItemID) {
+        guard let removed = remove(itemID: itemID) else {
+            itemIsNotFound(itemID)
+        }
+
+        guard let itemPosition = itemPositionMap()[afterItemID] else {
+            itemIsNotFound(afterItemID)
+        }
+
+        let itemIndex = sections[itemPosition.sectionIndex].elements.index(after: itemPosition.itemRelativeIndex)
+        sections[itemPosition.sectionIndex].elements.insert(removed, at: itemIndex)
+    }
+    
+    mutating func update(itemIDs: [ItemID]) {
+        let itemPositionMap = self.itemPositionMap()
+
+        for itemID in itemIDs {
+            guard let itemPosition = itemPositionMap[itemID] else {
+                itemIsNotFound(itemID)
+            }
+
+//            sections[itemPosition.sectionIndex].elements[itemPosition.itemRelativeIndex].isReloaded = true
+        }
+    }
+    
     mutating func append(sectionIDs: [SectionID]) {
         let newSections = sectionIDs.lazy.map(Section.init)
         sections.append(contentsOf: newSections)
     }
 
-    mutating func insert(sectionIDs: [SectionID], before beforeSectionID: SectionID, file: StaticString = #file, line: UInt = #line) {
+    mutating func insert(sectionIDs: [SectionID], before beforeSectionID: SectionID) {
         guard let sectionIndex = sectionIndex(of: beforeSectionID) else {
-            sectionIsNotFound(beforeSectionID, file: file, line: line)
+            sectionIsNotFound(beforeSectionID)
         }
 
         let newSections = sectionIDs.lazy.map(Section.init)
         sections.insert(contentsOf: newSections, at: sectionIndex)
     }
 
-    mutating func insert(sectionIDs: [SectionID], after afterSectionID: SectionID, file: StaticString = #file, line: UInt = #line) {
+    mutating func insert(sectionIDs: [SectionID], after afterSectionID: SectionID) {
         guard let beforeIndex = sectionIndex(of: afterSectionID) else {
-            sectionIsNotFound(afterSectionID, file: file, line: line)
+            sectionIsNotFound(afterSectionID)
         }
 
         let sectionIndex = sections.index(after: beforeIndex)
@@ -149,7 +186,42 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
             remove(sectionID: sectionID)
         }
     }
+    
+    mutating func move(sectionID: SectionID, before beforeSectionID: SectionID) {
+        guard let removed = remove(sectionID: sectionID) else {
+            sectionIsNotFound(sectionID)
+        }
 
+        guard let sectionIndex = sectionIndex(of: beforeSectionID) else {
+            sectionIsNotFound(beforeSectionID)
+        }
+
+        sections.insert(removed, at: sectionIndex)
+    }
+
+    mutating func move(sectionID: SectionID, after afterSectionID: SectionID) {
+        guard let removed = remove(sectionID: sectionID) else {
+            sectionIsNotFound(sectionID)
+        }
+
+        guard let beforeIndex = sectionIndex(of: afterSectionID) else {
+            sectionIsNotFound(afterSectionID)
+        }
+
+        let sectionIndex = sections.index(after: beforeIndex)
+        sections.insert(removed, at: sectionIndex)
+    }
+    
+    mutating func update(sectionIDs: [SectionID]) {
+        for sectionID in sectionIDs {
+            guard let sectionIndex = sectionIndex(of: sectionID) else {
+                continue
+            }
+
+//            sections[sectionIndex].isReloaded = true
+        }
+    }
+    
     mutating func removeAll() {
         sections.removeAll()
     }
@@ -198,16 +270,16 @@ private extension SectionStruct {
         }
     }
 
-    func itemIsNotFound(_ id: ItemID, file: StaticString, line: UInt) -> Never {
-        fatalError("item\(id) 不存在", file: file, line: line)
+    func itemIsNotFound(_ id: ItemID) -> Never {
+        fatalError("item\(id) 不存在")
     }
 
-    func sectionIsNotFound(_ id: SectionID, file: StaticString, line: UInt) -> Never {
-        fatalError("section\(id) 不存在", file: file, line: line)
+    func sectionIsNotFound(_ id: SectionID) -> Never {
+        fatalError("section\(id) 不存在")
     }
 
-    func noSections(file: StaticString, line: UInt) -> Never {
-        fatalError("列表没有一个可用的Section", file: file, line: line)
+    func noSections() -> Never {
+        fatalError("列表没有一个可用的Section")
     }
 }
 

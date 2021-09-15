@@ -143,6 +143,7 @@ extension TableViewDataSource{
         setHeightForFooter = callback
     }
 
+    ////apply申请时检查Diff
     public func apply(_ snapshot: DataSourceSnapshot<SectionType, ItemType>) {
         dataSource.sections = snapshot.structer.sections
         tableView?.reloadData()

@@ -20,7 +20,13 @@ struct Item: Hashable {
 }
 
 class ViewController: JHTableViewController {
-    let section1 = Section(title: "1")
+
+    lazy var section1: Section = {
+        let section1 = Section(title: "1")
+        
+        return section1
+    }()
+    
     let section2 = Section(title: "2")
     
     let item1 = Item(name: "1")
