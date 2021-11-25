@@ -149,7 +149,7 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
         let itemPositionMap = self.itemPositionMap()
 
         for itemID in itemIDs {
-            guard let itemPosition = itemPositionMap[itemID] else {
+            guard itemPositionMap[itemID] != nil else {
                 itemIsNotFound(itemID)
             }
 
@@ -214,7 +214,7 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
     
     mutating func update(sectionIDs: [SectionID]) {
         for sectionID in sectionIDs {
-            guard let sectionIndex = sectionIndex(of: sectionID) else {
+            guard sectionIndex(of: sectionID) != nil else {
                 continue
             }
 

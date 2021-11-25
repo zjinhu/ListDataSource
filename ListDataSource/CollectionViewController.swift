@@ -8,23 +8,60 @@
 import UIKit
 import SwiftBrick
 import SwiftMediator
+//1.首先确定数据源格式--即model
+struct Item2: Hashable {
+    var title : String?
+    var colorTwo : UIColor?
+}
+
+struct Item1: Hashable {
+    var name : String
+    var color : UIColor?
+}
+
+enum MoreItem: Hashable {
+  case one(Item1)
+  case two(Item2)
+}
 
 class CollectionViewController: JHCollectionViewController {
-    lazy var dataSource = CollectionViewDataSource<Section, Item>.init(collectionView!, needDelegate: true) { collectionView, indexPath, model in
-        let cell = collectionView.dequeueReusableCell(JHCollectionViewCell.self, indexPath: indexPath)
-
-        cell.backgroundColor = model.color
-        cell.subviews.forEach{ $0.removeFromSuperview(); }
-
-        let label = UILabel.init(frame: cell.bounds)
-        label.text = model.name
-        label.textAlignment = .center
-        cell.addSubview(label)
-        
-        return cell
-    }
+    ///2.快照
+    lazy var shot = DataSourceSnapshot<Section,MoreItem>()
+    ///3.数据源
+    lazy var secion1 = Section(title: "1", color: .red)
+    lazy var secion2 = Section(title: "2", color: .cyan)
     
-    var shot = DataSourceSnapshot<Section,Item>()
+    lazy var dataSource = CollectionViewDataSource<Section, MoreItem>.init(collectionView!, needDelegate: true) { collectionView, indexPath, model in
+        
+        switch model {
+        case .one(let one):
+            let cell = collectionView.dequeueReusableCell(JHCollectionViewCell.self, indexPath: indexPath)
+
+            cell.backgroundColor = one.color
+            cell.subviews.forEach{ $0.removeFromSuperview(); }
+
+            let label = UILabel.init(frame: cell.bounds)
+            label.text = one.name
+            label.textAlignment = .center
+            cell.addSubview(label)
+            
+            return cell
+        case .two(let two):
+            let cell = collectionView.dequeueReusableCell(JHCollectionViewCell.self, indexPath: indexPath)
+
+            cell.backgroundColor = two.colorTwo
+            cell.subviews.forEach{ $0.removeFromSuperview(); }
+
+            let label = UILabel.init(frame: cell.bounds)
+            label.text = two.title
+            label.textAlignment = .center
+            cell.addSubview(label)
+            
+            return cell
+        }
+
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,19 +75,60 @@ class CollectionViewController: JHCollectionViewController {
         collectionViewConfig()
     }
     
+    
     func collectionViewConfig(){
-        shot.appendSections([Section(title: "1", color: .red)])
-        shot.appendItems([Item(name: "1", color: .yellow),Item(name: "11", color: .cyan),Item(name: "111", color: .green),Item(name: "1111", color: .purple)])
+        shot.appendSections([secion1, secion2])
+        
+        shot.appendItems([.one(Item1(name: "11", color: .cyan)),
+                          .one(Item1(name: "22", color: .cyan)),
+                          .one(Item1(name: "33", color: .cyan))], toSection: secion1)
+        shot.appendItems([.two(Item2(title: "11", colorTwo: .red)),
+                          .two(Item2(title: "22", colorTwo: .red)),
+                          .two(Item2(title: "33", colorTwo: .red))], toSection: secion2)
+
         dataSource.apply(shot)
         
         dataSource.didSelectItem { collectionView, indexPath, model in
             print("index,\(indexPath)")
         }
         
-        dataSource.setSizeForItem { collectionView, layout, indexPath, model in
-            return CGSize(width: 100, height: 100)
+        dataSource.setEdgeInsetForSection { collectionView, layout, index, sectionModel in
+            switch index {
+            case 0:
+                return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+            default:
+                return UIEdgeInsets.zero
+            }
+            
         }
         
+        dataSource.setSizeForItem { collectionView, layout, indexPath, model in
+            switch model {
+            case .one( _):
+                return CGSize(width: 50, height: 50)
+            case .two( _):
+                return CGSize(width: ScreenWidth, height: 60)
+            }
+        }
+        
+        dataSource.setMinimumLineSpacingForSection { collectionView, layout, index, sectionModel in
+            switch index {
+            case 0:
+                return 1
+            default:
+                return 1
+            }
+        }
+        
+        dataSource.setMinimumInteritemSpacingForSection { collectionView, layout, index, sectionModel in
+            switch index {
+            case 0:
+                return 1
+            default:
+                return 1
+            }
+        }
+
         dataSource.setReusableView { collectionView, type, indexPath, sectionModel in
             if type == .sectionHeader{
                 let header = collectionView.dequeueReusableHeaderFooterView(JHCollectionReusableView.self, kindType: .sectionHeader, indexPath: indexPath)
@@ -62,7 +140,7 @@ class CollectionViewController: JHCollectionViewController {
                 header.addSubview(label)
                 return header
             }else{
-                let footer = collectionView.dequeueReusableHeaderFooterView(JHCollectionReusableView.self, kindType: .sectionHeader, indexPath: indexPath)
+                let footer = collectionView.dequeueReusableHeaderFooterView(JHCollectionReusableView.self, kindType: .sectionFooter, indexPath: indexPath)
                 footer.subviews.forEach{ $0.removeFromSuperview(); }
                 footer.backgroundColor = sectionModel.color
                 let label = UILabel.init(frame: footer.bounds)
@@ -89,41 +167,5 @@ class CollectionViewController: JHCollectionViewController {
             self.shot.deleteAll()
             self.dataSource.apply(self.shot)
         })
-        
-        UIButton.snpButton(supView: view, backColor: .orange, title: "添加section", touchUp: { (_) in
-            let sec = Section(title: "2", color: .yellow)
-            self.shot.appendSections([sec])
-//            self.shot.insertSections([sec], beforeSection: Section(title: "1"))
-            self.shot.appendItems([Item(name: "2", color: .systemBlue),Item(name: "3", color: .systemBlue),Item(name: "4", color: .systemBlue),Item(name: "5", color: .systemBlue)], toSection: sec)
-            self.dataSource.apply(self.shot)
-            
-        }) { (m) in
-            m.left.equalToSuperview()
-            m.bottom.equalToSuperview().offset(-60)
-            m.width.equalTo(100)
-            m.height.equalTo(40)
-        }
-        
-        UIButton.snpButton(supView: view, backColor: .orange, title: "s1添加元素", touchUp: { (_) in
-            self.shot.appendItems([Item(name: "6", color: .systemTeal),Item(name: "7", color: .systemTeal),Item(name: "8", color: .systemTeal),Item(name: "9", color: .systemTeal)], toSection: Section(title: "1", color: .red))
-//            self.shot.insertItems([Item(name: "6"),Item(name: "7"),Item(name: "8"),Item(name: "9")], beforeItem: Item(name: "11"))
-            self.dataSource.apply(self.shot)
-        }) { (m) in
-            m.right.equalToSuperview()
-            m.bottom.equalToSuperview().offset(-60)
-            m.width.equalTo(100)
-            m.height.equalTo(40)
-        }
-        
-        UIButton.snpButton(supView: view, backColor: .orange, title: "删s1中的1111", touchUp: { (_) in
-            self.shot.deleteItems([Item(name: "1111", color: .purple)])
-            self.dataSource.apply(self.shot)
-        }) { (m) in
-            m.centerX.bottom.equalToSuperview()
-            m.bottom.equalToSuperview().offset(-60)
-            m.width.equalTo(100)
-            m.height.equalTo(40)
-        }
-        
     }
 }
