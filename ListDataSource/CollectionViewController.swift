@@ -167,5 +167,7 @@ class CollectionViewController: JHCollectionViewController {
             self.shot.deleteAll()
             self.dataSource.apply(self.shot)
         })
+        
     }
+    
 }

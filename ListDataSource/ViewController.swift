@@ -112,7 +112,7 @@ class ViewController: JHTableViewController {
         
         addLeftBarButton(text: "清空", normalColor: .darkGray, highlightColor: .lightGray) { [weak self] _ in
             guard let `self` = self else{return}
-            self.shot.deleteAllItems()
+            self.shot.deleteAll()
             self.dataSource.apply(self.shot)
         }
         
