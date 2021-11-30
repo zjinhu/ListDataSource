@@ -9,123 +9,125 @@
 import Foundation
 public struct DataSourceSnapshot<SectionType: Hashable, ItemType: Hashable> {
     internal var structer = SectionStruct<SectionType, ItemType>()
-    
+
     public init() {}
+
     ///获取item数量
     public var numberOfItems: Int {
         return itemIDs.count
     }
+
     ///获取section数量
     public var numberOfSections: Int {
         return sectionIDs.count
     }
+
     ///获取所有section数组
     public var sectionIDs: [SectionType] {
-        return structer.allSections
+        return structer.allSectionIDs
     }
+
     ///获取所有item数组
     public var itemIDs: [ItemType] {
-        return structer.allItems
+        return structer.allItemIDs
     }
+
     ///得到当前Section下边的item数量
-    public func numberOfItems(inSection identifier: SectionType) -> Int {
-        return itemIdentifiers(inSection: identifier).count
+    public func numberOfItems(inSection section: SectionType) -> Int {
+        return itemIDs(inSection: section).count
     }
+
     ///得到当前Section下边的Item对象数组
-    public func itemIdentifiers(inSection identifier: SectionType) -> [ItemType] {
-        return structer.items(in: identifier)
+    public func itemIDs(inSection section: SectionType) -> [ItemType] {
+        return structer.items(in: section)
     }
+
     ///得到某一个item所在的Section
-    public func sectionIdentifier(containingItem identifier: ItemType) -> SectionType? {
-        return structer.section(containing: identifier)
+    public func sectionID(containingItem section: ItemType) -> SectionType? {
+        return structer.section(containing: section)
     }
+
     ///获取item在section中的位置---第几个
-    public func indexOfItem(_ identifier: ItemType) -> Int? {
-        return itemIDs.firstIndex { $0.isEqualHash(to: identifier) }
+    public func indexOfItem(_ item: ItemType) -> Int? {
+        return itemIDs.firstIndex { $0.isEqualHash(to: item) }
     }
+
     ///获取section在table中的位置---第几个
-    public func indexOfSection(_ identifier: SectionType) -> Int? {
-        return sectionIDs.firstIndex { $0.isEqualHash(to: identifier) }
+    public func indexOfSection(_ section: SectionType) -> Int? {
+        return sectionIDs.firstIndex { $0.isEqualHash(to: section) }
     }
+
     ///添加item到特定section的最后
-    public mutating func appendItems(_ identifiers: [ItemType], toSection sectionIdentifier: SectionType? = nil) {
-        structer.append(itemIDs: identifiers, to: sectionIdentifier)
+    public mutating func appendItems(_ items: [ItemType], toSection: SectionType? = nil) {
+        structer.append(itemIDs: items, to: toSection)
     }
+
     ///插入item到特定item之前
-    public mutating func insertItems(_ identifiers: [ItemType], beforeItem beforeIdentifier: ItemType) {
-        structer.insert(itemIDs: identifiers, before: beforeIdentifier)
+    public mutating func insertItems(_ items: [ItemType], beforeItem: ItemType) {
+        structer.insert(itemIDs: items, before: beforeItem)
     }
+
     ///插入item到特定item之后
-    public mutating func insertItems(_ identifiers: [ItemType], afterItem afterIdentifier: ItemType) {
-        structer.insert(itemIDs: identifiers, after: afterIdentifier)
+    public mutating func insertItems(_ items: [ItemType], afterItem: ItemType) {
+        structer.insert(itemIDs: items, after: afterItem)
     }
+
     ///删除指定item
-    public mutating func deleteItems(_ identifiers: [ItemType]) {
-        structer.remove(itemIDs: identifiers)
-    }
-    
-    public mutating func updateItem(old: ItemType, new: ItemType) {
-        
-    }
-    
-    public mutating func updateItem(index: IndexPath, new: ItemType) {
-        
-    }
-    
-    public mutating func reloadItems(_ identifiers: [ItemType]) {
-        structer.update(itemIDs: identifiers)
+    public mutating func deleteItems(_ items: [ItemType]) {
+        structer.remove(itemIDs: items)
     }
 
-    public mutating func moveItem(_ identifier: ItemType, beforeItem toIdentifier: ItemType) {
-        structer.move(itemID: identifier, before: toIdentifier)
-    }
-
-    public mutating func moveItem(_ identifier: ItemType, afterItem toIdentifier: ItemType) {
-        structer.move(itemID: identifier, after: toIdentifier)
-    }
-    
-    ///删除所有item---section还存在,内部数据为空
+    ///删除所有item,不影响Section数量
     public mutating func deleteAllItems() {
         structer.removeAllItems()
     }
+
+    public mutating func moveItem(_ item: ItemType, beforeItem: ItemType) {
+        structer.move(itemID: item, before: beforeItem)
+    }
+
+    public mutating func moveItem(_ item: ItemType, afterItem: ItemType) {
+        structer.move(itemID: item, after: afterItem)
+    }
+
+    public mutating func reloadItems(_ items: [ItemType]) {
+        structer.update(itemIDs: items)
+    }
+
     ///添加Section
-    public mutating func appendSections(_ identifiers: [SectionType]) {
-        structer.append(sectionIDs: identifiers)
+    public mutating func appendSections(_ sections: [SectionType]) {
+        structer.append(sectionIDs: sections)
     }
+
     ///插入section到指定的section之前
-    public mutating func insertSections(_ identifiers: [SectionType], beforeSection toIdentifier: SectionType) {
-        structer.insert(sectionIDs: identifiers, before: toIdentifier)
+    public mutating func insertSections(_ sections: [SectionType], beforeSection: SectionType) {
+        structer.insert(sectionIDs: sections, before: beforeSection)
     }
+
     ///插入section到指定的section之后
-    public mutating func insertSections(_ identifiers: [SectionType], afterSection toIdentifier: SectionType) {
-        structer.insert(sectionIDs: identifiers, after: toIdentifier)
+    public mutating func insertSections(_ sections: [SectionType], afterSection: SectionType) {
+        structer.insert(sectionIDs: sections, after: afterSection)
     }
+
     ///删除指定的section
-    public mutating func deleteSections(_ identifiers: [SectionType]) {
-        structer.remove(sectionIDs: identifiers)
+    public mutating func deleteSections(_ sections: [SectionType]) {
+        structer.remove(sectionIDs: sections)
     }
+
+    public mutating func moveSection(_ section: SectionType, beforeSection: SectionType) {
+        structer.move(sectionID: section, before: beforeSection)
+    }
+
+    public mutating func moveSection(_ section: SectionType, afterSection: SectionType) {
+        structer.move(sectionID: section, after: afterSection)
+    }
+
+    public mutating func reloadSections(_ sections: [SectionType]) {
+        structer.update(sectionIDs: sections)
+    }
+    
     ///删除所有数据---包括section,都会清空
     public mutating func deleteAll() {
         structer.removeAll()
-    }
-    
-    public mutating func updateSection(old: SectionType, new: SectionType) {
-        
-    }
-    
-    public mutating func updateSection(index: IndexPath, new: SectionType) {
-        
-    }
-    
-    public mutating func moveSection(_ identifier: SectionType, beforeSection toIdentifier: SectionType) {
-        structer.move(sectionID: identifier, before: toIdentifier)
-    }
-
-    public mutating func moveSection(_ identifier: SectionType, afterSection toIdentifier: SectionType) {
-        structer.move(sectionID: identifier, after: toIdentifier)
-    }
-    
-    public mutating func reloadSections(_ identifiers: [SectionType]) {
-        structer.update(sectionIDs: identifiers)
     }
 }

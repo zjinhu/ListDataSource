@@ -55,7 +55,6 @@ open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObj
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("当前位置下的ItemType数据不存在")
         }
-        print("\(dataSource.sections)")
         let cell = setCell(tableView, indexPath, item)
         return cell
     }
@@ -144,31 +143,21 @@ extension TableViewDataSource{
     }
 
     ////apply申请时检查Diff
-    public func apply(_ snapshot: DataSourceSnapshot<SectionType, ItemType>) {
-        dataSource.sections = snapshot.structer.sections
-        tableView?.reloadData()
+    public func apply(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
+                      animation: Bool = false,
+                      completion: (() -> Void)? = nil) {
+        dataSource.apply(
+            snapshot,
+            view: tableView,
+            animatingDifferences: animation,
+            performUpdates: { tableView, changeset, setSections in
+                tableView.reload(using: changeset, with: self.defaultRowAnimation, setData: setSections)
+        },
+            completion: completion
+        )
     }
-    
-    public func applyRows(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
-                          itemIndexPaths: [IndexPath]) {
-        dataSource.sections = snapshot.structer.sections
-        tableView?.reloadRows(at: itemIndexPaths, with: defaultRowAnimation)
-    }
-    
-    public func applyRows(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
-                          itemIDs: [ItemType]) {
-        dataSource.sections = snapshot.structer.sections
-        var itemIndesPaths = [IndexPath]()
-        itemIDs.forEach { item in
-            guard let index = indexPath(for: item) else{return}
-            itemIndesPaths.append(index)
-        }
-        tableView?.reloadRows(at: itemIndesPaths, with: defaultRowAnimation)
-    }
-    
-    public func applySections(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
-                              sectionIndex : Int) {
-        dataSource.sections = snapshot.structer.sections
-        tableView?.reloadSections(IndexSet(integer: sectionIndex), with: defaultRowAnimation)
+
+    public func snapshot() -> DataSourceSnapshot<SectionType, ItemType> {
+        return dataSource.snapshot()
     }
 }

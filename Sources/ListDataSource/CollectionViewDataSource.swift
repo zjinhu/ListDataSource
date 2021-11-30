@@ -197,31 +197,18 @@ extension CollectionViewDataSource{
         return dataSource.indexPath(for: itemId)
     }
     
-    public func apply(_ snapshot: DataSourceSnapshot<SectionType, ItemType>) {
-        dataSource.sections = snapshot.structer.sections
-        collectionView?.reloadData()
+    public func apply(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
+                      animation: Bool = false,
+                      completion: (() -> Void)? = nil) {
+        dataSource.apply(snapshot,
+                         view: collectionView,
+                         animatingDifferences: animation,
+                         performUpdates: { collectionView, changeset, setSections in
+            collectionView.reload(using: changeset, setData: setSections)
+        }, completion: completion)
     }
     
-    public func applyRows(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
-                          itemIndexPaths: [IndexPath]) {
-        dataSource.sections = snapshot.structer.sections
-        collectionView?.reloadItems(at: itemIndexPaths)
-    }
-    
-    public func applyRows(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
-                          itemIDs: [ItemType]) {
-        dataSource.sections = snapshot.structer.sections
-        var itemIndesPaths = [IndexPath]()
-        itemIDs.forEach { item in
-            guard let index = indexPath(for: item) else{return}
-            itemIndesPaths.append(index)
-        }
-        collectionView?.reloadItems(at: itemIndesPaths)
-    }
-    
-    public func applySections(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
-                              sectionIndex : Int) {
-        dataSource.sections = snapshot.structer.sections
-        collectionView?.reloadSections(IndexSet(integer: sectionIndex))
+    public func snapshot() -> DataSourceSnapshot<SectionType, ItemType> {
+        return dataSource.snapshot()
     }
 }
