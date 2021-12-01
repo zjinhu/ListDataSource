@@ -18,7 +18,6 @@ struct Section: Hashable {
 class Item: Hashable {
     
     var name : String?
-    var id : Int?
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
@@ -28,10 +27,9 @@ class Item: Hashable {
         return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
     }
 
-    convenience init(name: String, id: Int) {
+    convenience init(name: String) {
         self.init()
         self.name = name
-        self.id = id
     }
 }
 
@@ -44,21 +42,21 @@ class ViewController: JHTableViewController {
     
     let section2 = Section(title: "2")
     
-    let item1 = Item(name: "1", id: 0)
-    let item2 = Item(name: "2", id: 1)
-    let item3 = Item(name: "3", id: 2)
-    let item4 = Item(name: "4", id: 3)
-    var item5 = Item(name: "5", id: 4)
-    let item6 = Item(name: "1111", id: 5)
-    let item7 = Item(name: "7", id: 6)
-    let item8 = Item(name: "8", id: 7)
-    let item9 = Item(name: "9", id: 8)
+    let item1 = Item(name: "1")
+    let item2 = Item(name: "2")
+    let item3 = Item(name: "3")
+    let item4 = Item(name: "4")
+    var item5 = Item(name: "5")
+    let item6 = Item(name: "1111")
+    let item7 = Item(name: "7")
+    let item8 = Item(name: "8")
+    let item9 = Item(name: "9")
     
-    let item11 = Item(name: "11", id: 9)
-    let item12 = Item(name: "12", id: 10)
-    let item13 = Item(name: "13", id: 11)
-    let item14 = Item(name: "14", id: 12)
-    let item15 = Item(name: "15", id: 13)
+    let item11 = Item(name: "11")
+    let item12 = Item(name: "12")
+    let item13 = Item(name: "13")
+    let item14 = Item(name: "14")
+    let item15 = Item(name: "15")
     
     lazy var dataSource = TableViewDataSource<Section, Item>.init(tableView!, needDelegate: true) { tableView, indexPath, model in
         let cell = tableView.dequeueReusableCell(JHTableViewCell.self)
