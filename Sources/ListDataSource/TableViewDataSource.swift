@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObject, UITableViewDataSource, UITableViewDelegate{
+open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObject, UITableViewDataSource, UITableViewDelegate{
     ///设置Cell动画
     public var defaultRowAnimation: UITableView.RowAnimation = .automatic
     ///设置Cell闭包
@@ -58,7 +58,7 @@ public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSO
         return dataSource.numberOfItems(in: section)
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("当前位置下的ItemType数据不存在")
         }
@@ -67,7 +67,7 @@ public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSO
     }
 
     //MARK:  代理 UITableViewDelegate
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         guard let sectionID = dataSource.sectionID(for: section),
               let height = setHeightForHeader?(tableView, section, sectionID) else {
             return CGFloat.leastNormalMagnitude
@@ -75,7 +75,7 @@ public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSO
         return height
     }
     
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         guard let sectionID = dataSource.sectionID(for: section),
               let height = setHeightForFooter?(tableView, section, sectionID) else {
             return CGFloat.leastNormalMagnitude
@@ -83,7 +83,7 @@ public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSO
         return height
     }
     
-    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         guard let sectionID = dataSource.sectionID(for: section),
               let view = setHeaderView?(tableView, section, sectionID) else {
@@ -92,7 +92,7 @@ public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSO
         return view
     }
     
-    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         guard let sectionID = dataSource.sectionID(for: section),
               let view = setFooterView?(tableView, section, sectionID) else {
             return UIView()
@@ -100,7 +100,7 @@ public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSO
         return view
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let itemID = dataSource.itemID(for: indexPath),
               let height = setHeightForRow?(tableView, indexPath, itemID) else {
             return UITableView.automaticDimension
@@ -108,7 +108,7 @@ public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSO
         return height
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("当前位置下的ItemType数据不存在")
         }

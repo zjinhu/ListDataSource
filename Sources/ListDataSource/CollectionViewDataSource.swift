@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
+open class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
     ///UICollectionView的Header/Footer类型
     public enum ReusableViewKindType {
         case sectionHeader
@@ -69,7 +69,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         return dataSource.numberOfItems(in: section)
     }
  
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("当前位置下的ItemType数据不存在")
         }
@@ -77,7 +77,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         return cell
     }
     
-    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         var type: ReusableViewKindType = .sectionHeader
         if kind == UICollectionView.elementKindSectionFooter{
@@ -92,7 +92,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
     }
     
     //MARK: FlowLayout代理 UICollectionViewDelegateFlowLayout
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
 
         guard let item = dataSource.itemID(for: indexPath),
               let size = setSizeForItem?(collectionView, collectionViewLayout, indexPath, item) else {
@@ -101,7 +101,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         return size
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets{
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets{
 
         guard let sectionID = dataSource.sectionID(for: section),
               let edge = setEdgeInsetForSection?(collectionView, collectionViewLayout, section, sectionID) else {
@@ -110,7 +110,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         return edge
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat{
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat{
 
         guard let sectionID = dataSource.sectionID(for: section),
               let space = setMinimumLineSpacingForSection?(collectionView, collectionViewLayout, section, sectionID) else {
@@ -119,7 +119,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         return space
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat{
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat{
 
         guard let sectionID = dataSource.sectionID(for: section),
               let space = setMinimumInteritemSpacingForSection?(collectionView, collectionViewLayout, section, sectionID) else {
@@ -128,7 +128,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         return space
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
 
         guard let sectionID = dataSource.sectionID(for: section),
               let size = setSizeForHeader?(collectionView, collectionViewLayout, section, sectionID) else {
@@ -137,7 +137,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         return size
     }
 
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize{
+    open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize{
 
         guard let sectionID = dataSource.sectionID(for: section),
               let size = setSizeForFooter?(collectionView, collectionViewLayout, section, sectionID) else {
@@ -147,14 +147,14 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
     }
     
     //MARK:  代理 UICollectionViewDelegate
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
+    open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("当前位置下的ItemType数据不存在")
         }
         didSelectItem?(collectionView, indexPath, item)
     }
     
-    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath){
+    open func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath){
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("当前位置下的ItemType数据不存在")
         }

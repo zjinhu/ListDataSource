@@ -20,6 +20,7 @@
 		81446ED42756114A00F23937 /* SectionStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81446ECE2756114A00F23937 /* SectionStruct.swift */; };
 		81446ED62756114A00F23937 /* DataSourceSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81446ED02756114A00F23937 /* DataSourceSnapshot.swift */; };
 		815CFBA02754D14D009FDE83 /* DifferenceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 815CFB9F2754D14D009FDE83 /* DifferenceKit */; };
+		816B6E2E27574B2600129872 /* Diff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816B6E2D27574B2600129872 /* Diff.swift */; };
 		81D53B1526AA7ACB002F5170 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D53B1426AA7ACB002F5170 /* CollectionViewController.swift */; };
 		81D53B1826AA7F51002F5170 /* SwiftMediator in Frameworks */ = {isa = PBXBuildFile; productRef = 81D53B1726AA7F51002F5170 /* SwiftMediator */; };
 /* End PBXBuildFile section */
@@ -38,6 +39,7 @@
 		81446ECD2756114A00F23937 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		81446ECE2756114A00F23937 /* SectionStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionStruct.swift; sourceTree = "<group>"; };
 		81446ED02756114A00F23937 /* DataSourceSnapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceSnapshot.swift; sourceTree = "<group>"; };
+		816B6E2D27574B2600129872 /* Diff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Diff.swift; sourceTree = "<group>"; };
 		81D53B1426AA7ACB002F5170 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -77,6 +79,7 @@
 				814072C226A176EE00A4CAF9 /* ListDataSource */,
 				814072AE26A175E000A4CAF9 /* AppDelegate.swift */,
 				814072B026A175E000A4CAF9 /* SceneDelegate.swift */,
+				816B6E2D27574B2600129872 /* Diff.swift */,
 				814072B226A175E000A4CAF9 /* ViewController.swift */,
 				81D53B1426AA7ACB002F5170 /* CollectionViewController.swift */,
 				814072B426A175E000A4CAF9 /* Main.storyboard */,
@@ -186,6 +189,7 @@
 				814072AF26A175E000A4CAF9 /* AppDelegate.swift in Sources */,
 				814072B126A175E000A4CAF9 /* SceneDelegate.swift in Sources */,
 				81446ED42756114A00F23937 /* SectionStruct.swift in Sources */,
+				816B6E2E27574B2600129872 /* Diff.swift in Sources */,
 				814072C826A176EE00A4CAF9 /* CollectionViewDataSource.swift in Sources */,
 				81446ED62756114A00F23937 /* DataSourceSnapshot.swift in Sources */,
 				81446ED32756114A00F23937 /* DataSource.swift in Sources */,
