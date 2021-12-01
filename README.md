@@ -19,7 +19,7 @@ DiffableDataSources和API Diffable Data Source的在搭建VC的用法我这里�
 ### Swift Package Manager
 从 Xcode 11 开始，集成了 Swift Package Manager，使用起来非常方便。ListDataSource 也支持通过 Swift Package Manager 集成。
 在 Xcode 的菜单栏中选择 File > Swift Packages > Add Pacakage Dependency，然后在搜索栏输入
-https://github.com/jackiehu/ListDataSource，即可完成集成
+https://github.com/jackiehu/ListDataSource  即可完成集成
 ### 手动集成
 ListDataSource 也支持手动集成，只需把Sources文件夹中的ListDataSource文件夹拖进需要集成的项目即可
 ## 更多砖块工具加速APP开发
