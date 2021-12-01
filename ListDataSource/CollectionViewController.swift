@@ -86,12 +86,32 @@ class CollectionViewController: JHCollectionViewController {
         ///针对数据的配置
         shot.appendSections([secion1, secion2])
         
-        shot.appendItems([.one(Item1(name: "11", color: .cyan)),
-                          .one(Item1(name: "22", color: .cyan)),
-                          .one(Item1(name: "33", color: .cyan))], toSection: secion1)
-        shot.appendItems([.two(Item2(title: "11", colorTwo: .red)),
-                          .two(Item2(title: "22", colorTwo: .red)),
-                          .two(Item2(title: "33", colorTwo: .red))], toSection: secion2)
+        shot.appendItems([.one(Item1(name: "1", color: .cyan)),
+                          .one(Item1(name: "2", color: .cyan)),
+                          .one(Item1(name: "3", color: .cyan)),
+                          .one(Item1(name: "4", color: .cyan)),
+                          .one(Item1(name: "5", color: .cyan)),
+                          .one(Item1(name: "6", color: .cyan)),
+                          .one(Item1(name: "7", color: .cyan)),
+                          .one(Item1(name: "8", color: .cyan)),
+                          .one(Item1(name: "9", color: .cyan)),
+                          .one(Item1(name: "10", color: .cyan)),
+                          .one(Item1(name: "11", color: .cyan)),
+                          .one(Item1(name: "12", color: .cyan)),
+                          .one(Item1(name: "13", color: .cyan)),
+                          .one(Item1(name: "14", color: .cyan)),
+                          .one(Item1(name: "15", color: .cyan)),
+                          .one(Item1(name: "16", color: .cyan)),
+                          .one(Item1(name: "17", color: .cyan))], toSection: secion1)
+        shot.appendItems([.two(Item2(title: "1", colorTwo: .random)),
+                          .two(Item2(title: "2", colorTwo: .random)),
+                          .two(Item2(title: "3", colorTwo: .random)),
+                          .two(Item2(title: "4", colorTwo: .random)),
+                          .two(Item2(title: "5", colorTwo: .random)),
+                          .two(Item2(title: "6", colorTwo: .random)),
+                          .two(Item2(title: "7", colorTwo: .random)),
+                          .two(Item2(title: "8", colorTwo: .random)),
+                          .two(Item2(title: "9", colorTwo: .random))], toSection: secion2)
 
         dataSource.apply(shot)
         

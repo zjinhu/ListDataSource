@@ -35,12 +35,11 @@ class Item: Hashable {
 
 class ViewController: JHTableViewController {
 
-    lazy var section1: Section = {
-        let section1 = Section(title: "1")
-        return section1
-    }()
+
+    let section1 = Section(title: "1", color: .yellow)
+
     
-    let section2 = Section(title: "2")
+    let section2 = Section(title: "2", color: .purple)
     
     let item1 = Item(name: "1")
     let item2 = Item(name: "2")
@@ -84,19 +83,17 @@ class ViewController: JHTableViewController {
         dataSource.apply(shot)
         
         dataSource.setHeaderView { tableView, index, sectionModel in
-            let view = UIView()
-            if sectionModel.title == "1"{
-                view.backgroundColor = .red
-            }else{
-                view.backgroundColor = .yellow
-            }
+            let view = UILabel()
+            view.backgroundColor = sectionModel.color
+            view.text = "-------------\(sectionModel.title)---------------"
+            view.textAlignment = .center
             return view
         }
         .setHeightForHeader { tableView, index, sectionModel in
             if sectionModel.title == "1"{
                 return 100
             }else{
-                return 20
+                return 50
             }
         }
         .didSelectRow { tableView, index, model in
@@ -132,7 +129,7 @@ class ViewController: JHTableViewController {
     func addAction(){
         let optionMenu = UIAlertController(title: nil, message: "列表操作", preferredStyle: .actionSheet)
 
-        let action1 = UIAlertAction(title: "添加section", style: .default, handler:{ (alert: UIAlertAction!) -> Void in
+        let action1 = UIAlertAction(title: "添加指定section", style: .default, handler:{ (alert: UIAlertAction!) -> Void in
             self.shot.appendSections([self.section2])
 
             self.shot.appendItems([self.item11,
@@ -143,7 +140,8 @@ class ViewController: JHTableViewController {
             self.dataSource.apply(self.shot)
         })
 
-        let action2 = UIAlertAction(title: "s1添加元素", style: .default, handler:{(alert: UIAlertAction!) -> Void in
+        let action2 = UIAlertAction(title: "指定s1添加元素", style: .default, handler:{(alert: UIAlertAction!) -> Void in
+            ///清空后 section1也会从数组中移除,再次添加元素会找不到Section
             self.shot.appendItems([self.item7,
                                    self.item8,
                                    self.item9], toSection: self.section1)
@@ -164,11 +162,23 @@ class ViewController: JHTableViewController {
             self.dataSource.apply(self.shot)
 
         })
+        
+        let action5 = UIAlertAction(title: "添加随机Section", style: .default, handler:{(alert: UIAlertAction!) -> Void in
 
+            let section = Section(title: "\(Int.random(in: 0...99))", color: .random)
+            self.shot.appendSections([section])
+            
+            let item = Item(name: "\(Int.random(in: 0...99))")
+            self.shot.appendItems([item], toSection: section)
+        
+            self.dataSource.apply(self.shot)
+        })
+        
         optionMenu.addAction(action1)
         optionMenu.addAction(action2)
         optionMenu.addAction(action3)
         optionMenu.addAction(action4)
+        optionMenu.addAction(action5)
         self.present(optionMenu, animated: true, completion: nil)
     }
 }
