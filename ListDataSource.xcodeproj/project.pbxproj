@@ -92,8 +92,8 @@
 			children = (
 				814072C326A176EE00A4CAF9 /* CollectionViewDataSource.swift */,
 				814072C426A176EE00A4CAF9 /* TableViewDataSource.swift */,
-				81446ECD2756114A00F23937 /* DataSource.swift */,
 				81446ED02756114A00F23937 /* DataSourceSnapshot.swift */,
+				81446ECD2756114A00F23937 /* DataSource.swift */,
 				81446ECE2756114A00F23937 /* SectionStruct.swift */,
 			);
 			name = ListDataSource;

@@ -22,10 +22,12 @@ class DataSource<SectionType: Hashable, ItemType: Hashable> {
     func numberOfSections() -> Int{
         return sections.count
     }
+    
     ///获取section中item个数------代理方法里用
     func numberOfItems(in section: Int) -> Int{
         return sections[section].elements.count
     }
+    
     ///根据数字位置获取Section对象
     func sectionID(for section: Int) -> SectionType? {
         let section = sections[section]
@@ -46,16 +48,9 @@ class DataSource<SectionType: Hashable, ItemType: Hashable> {
         
         return items[indexPath.item].differenceIdentifier
     }
-    
-    func unsafeItemIdentifier(for indexPath: IndexPath, file: StaticString = #file, line: UInt = #line) -> ItemType {
-        guard let itemID = itemID(for: indexPath) else {
-            fatalError("item\(indexPath) 不存在")
-        }
-        
-        return itemID
-    }
+
     ///根据item获取其所在IndexPath
-    func indexPath(for itemIdentifier: ItemType) -> IndexPath? {
+    func indexPath(for itemID: ItemType) -> IndexPath? {
         let indexPathMap: [ItemType: IndexPath] = sections.enumerated()
             .reduce(into: [:]) { result, section in
                 for (itemIndex, item) in section.element.elements.enumerated() {
@@ -65,9 +60,16 @@ class DataSource<SectionType: Hashable, ItemType: Hashable> {
                     )
                 }
             }
-        return indexPathMap[itemIdentifier]
+        return indexPathMap[itemID]
     }
-    
+    ///不安全的方式获取item对象,索引位置不正确可能获取为空
+    func itemID(for indexPath: IndexPath) -> ItemType {
+        guard let itemID = itemID(for: indexPath) else {
+            fatalError("item\(indexPath) 不存在")
+        }
+        return itemID
+    }
+    ///使用DifferenceKit在子线程进行数据比对
     func apply<View: AnyObject>(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
                                 view: View?,
                                 animatingDifferences: Bool,

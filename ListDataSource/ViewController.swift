@@ -94,16 +94,14 @@ class ViewController: JHTableViewController {
             }
             return view
         }
-        
-        dataSource.setHeightForHeader { tableView, index, sectionModel in
+        .setHeightForHeader { tableView, index, sectionModel in
             if sectionModel.title == "1"{
                 return 100
             }else{
                 return 20
             }
         }
-        
-        dataSource.didSelectRow { tableView, index, model in
+        .didSelectRow { tableView, index, model in
             print("index,\(index)")
         }
     }
@@ -131,9 +129,6 @@ class ViewController: JHTableViewController {
             m.width.equalTo(100)
             m.height.equalTo(40)
         }
-        
-        
-        
     }
     
     func addAction(){

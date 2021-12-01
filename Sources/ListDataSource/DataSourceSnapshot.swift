@@ -7,6 +7,7 @@
 //
 
 import Foundation
+///统一数据操作,不持有数据,中转SectionStruct所有操作
 public struct DataSourceSnapshot<SectionType: Hashable, ItemType: Hashable> {
     internal var structer = SectionStruct<SectionType, ItemType>()
 
@@ -81,15 +82,18 @@ public struct DataSourceSnapshot<SectionType: Hashable, ItemType: Hashable> {
     public mutating func deleteAllItems() {
         structer.removeAllItems()
     }
-
+    
+    ///移动Item对象到指定Item前边
     public mutating func moveItem(_ item: ItemType, beforeItem: ItemType) {
         structer.move(itemID: item, before: beforeItem)
     }
-
+    
+    ///移动Item对象到指定Item后边
     public mutating func moveItem(_ item: ItemType, afterItem: ItemType) {
         structer.move(itemID: item, after: afterItem)
     }
-
+    
+    ///更新Item---注意Item必须是Class,不能是struct,因为在数组中struct是深拷贝,无法修改
     public mutating func reloadItems(_ items: [ItemType]) {
         structer.update(itemIDs: items)
     }
@@ -113,15 +117,18 @@ public struct DataSourceSnapshot<SectionType: Hashable, ItemType: Hashable> {
     public mutating func deleteSections(_ sections: [SectionType]) {
         structer.remove(sectionIDs: sections)
     }
-
+    
+    ///移动Section对象到指定Section前边
     public mutating func moveSection(_ section: SectionType, beforeSection: SectionType) {
         structer.move(sectionID: section, before: beforeSection)
     }
-
+    
+    ///移动Section对象到指定Section后边
     public mutating func moveSection(_ section: SectionType, afterSection: SectionType) {
         structer.move(sectionID: section, after: afterSection)
     }
-
+    
+    ///更新section,如果需要修改Section中的数据也需要注意Section必须是Class,不能是struct,因为在数组中struct是深拷贝,无法修改,
     public mutating func reloadSections(_ sections: [SectionType]) {
         structer.update(sectionIDs: sections)
     }

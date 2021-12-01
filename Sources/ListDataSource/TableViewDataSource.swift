@@ -8,31 +8,37 @@
 
 import UIKit
 
-open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObject, UITableViewDataSource, UITableViewDelegate{
-
+public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObject, UITableViewDataSource, UITableViewDelegate{
+    ///设置Cell动画
     public var defaultRowAnimation: UITableView.RowAnimation = .automatic
-    
+    ///设置Cell闭包
     public typealias CellHandle = (UITableView, IndexPath, ItemType) -> UITableViewCell
+    private let setCell : CellHandle
+    ///点击事件
     public typealias DidSelectRowHandle = (UITableView, IndexPath, ItemType) -> Void
+    private var didSelectRow : DidSelectRowHandle?
+    ///cell大小
     public typealias SetHeightForRowHandle = (UITableView, IndexPath, ItemType) -> CGFloat
-    
+    private var setHeightForRow : SetHeightForRowHandle?
+    ///设置Header/Footer闭包
     public typealias HeaderHandle  = (UITableView, Int, SectionType) -> UIView?
     public typealias FooterHandle  = (UITableView, Int, SectionType) -> UIView?
+    private var setHeaderView : HeaderHandle?
+    private var setFooterView : FooterHandle?
+    ///header/footer大小
     public typealias SetHeightForHeaderHandle = (UITableView, Int, SectionType) -> CGFloat
     public typealias SetHeightForFooterHandle = (UITableView, Int, SectionType) -> CGFloat
-    
-    public let setCell : CellHandle
-    public var didSelectRow : DidSelectRowHandle?
-    public var setHeightForRow : SetHeightForRowHandle?
-    
-    public var setHeaderView : HeaderHandle?
-    public var setFooterView : FooterHandle?
-    public var setHeightForHeader : SetHeightForHeaderHandle?
-    public var setHeightForFooter : SetHeightForFooterHandle?
+    private var setHeightForHeader : SetHeightForHeaderHandle?
+    private var setHeightForFooter : SetHeightForFooterHandle?
 
     private weak var tableView: UITableView?
     private let dataSource = DataSource<SectionType, ItemType>()
     
+    /// 初始化TableViewDataSource,默认配置数据源代理
+    /// - Parameters:
+    ///   - tableView: UITableView
+    ///   - needDelegate: 是否需要代理方法
+    ///   - cellGetter: 配置cell
     public required init(_ tableView: UITableView, needDelegate: Bool = false, cellGetter: @escaping CellHandle) {
         self.setCell  = cellGetter
         self.tableView = tableView
@@ -42,7 +48,7 @@ open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObj
             tableView.delegate = self
         }
     }
-    
+    //MARK: 数据源代理 UITableViewDataSource
     public func numberOfSections(in tableView: UITableView) -> Int {
         return dataSource.numberOfSections()
     }
@@ -58,14 +64,8 @@ open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObj
         let cell = setCell(tableView, indexPath, item)
         return cell
     }
-    
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let item = dataSource.itemID(for: indexPath) else {
-            fatalError("当前位置下的ItemType数据不存在")
-        }
-        didSelectRow?(tableView, indexPath, item)
-    }
-    
+
+    //MARK:  代理 UITableViewDelegate
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         guard let sectionID = dataSource.sectionID(for: section),
               let height = setHeightForHeader?(tableView, section, sectionID) else {
@@ -106,43 +106,63 @@ open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObj
         }
         return height
     }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let item = dataSource.itemID(for: indexPath) else {
+            fatalError("当前位置下的ItemType数据不存在")
+        }
+        didSelectRow?(tableView, indexPath, item)
+    }
 }
 
 extension TableViewDataSource{
+    ///cell大小
+    @discardableResult
+    public func setHeightForRow(_ callback:@escaping SetHeightForRowHandle) -> Self{
+        setHeightForRow = callback
+        return self
+    }
+    ///点击事件
+    @discardableResult
+    public func didSelectRow(_ callback:@escaping DidSelectRowHandle) -> Self{
+        didSelectRow = callback
+        return self
+    }
+    ///设置Header/Footer闭包
+    @discardableResult
+    public func setHeaderView(_ callback:@escaping HeaderHandle) -> Self{
+        setHeaderView = callback
+        return self
+    }
     
+    @discardableResult
+    public func setFooterView(_ callback:@escaping FooterHandle) -> Self{
+        setFooterView = callback
+        return self
+    }
+    ///header/footer大小
+    @discardableResult
+    public func setHeightForHeader(_ callback:@escaping SetHeightForHeaderHandle) -> Self{
+        setHeightForHeader = callback
+        return self
+    }
+    
+    @discardableResult
+    public func setHeightForFooter(_ callback:@escaping SetHeightForFooterHandle) -> Self{
+        setHeightForFooter = callback
+        return self
+    }
+    
+    ///根据索引获取Item对象
     public func itemId(for indexPath: IndexPath) -> ItemType? {
         return dataSource.itemID(for: indexPath)
     }
-    
+    ///根据Item对象获取所在位置索引
     public func indexPath(for itemId: ItemType) -> IndexPath? {
         return dataSource.indexPath(for: itemId)
     }
     
-    public func setHeightForRow(_ callback:@escaping SetHeightForRowHandle) {
-        setHeightForRow = callback
-    }
-    
-    public func didSelectRow(_ callback:@escaping DidSelectRowHandle) {
-        didSelectRow = callback
-    }
-    
-    public func setHeaderView(_ callback:@escaping HeaderHandle) {
-        setHeaderView = callback
-    }
-    
-    public func setFooterView(_ callback:@escaping FooterHandle) {
-        setFooterView = callback
-    }
-    
-    public func setHeightForHeader(_ callback:@escaping SetHeightForHeaderHandle) {
-        setHeightForHeader = callback
-    }
-    
-    public func setHeightForFooter(_ callback:@escaping SetHeightForFooterHandle) {
-        setHeightForFooter = callback
-    }
-
-    ////apply申请时检查Diff
+    ///变更数据---相当于reload
     public func apply(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
                       animation: Bool = false,
                       completion: (() -> Void)? = nil) {
@@ -156,7 +176,8 @@ extension TableViewDataSource{
             completion: completion
         )
     }
-
+    
+    ///获取当前view快照
     public func snapshot() -> DataSourceSnapshot<SectionType, ItemType> {
         return dataSource.snapshot()
     }

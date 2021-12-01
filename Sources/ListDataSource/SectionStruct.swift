@@ -8,8 +8,9 @@
 
 import Foundation
 import DifferenceKit
-
+///此处是所有数据数组的持有
 struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
+    
     struct Item: Differentiable, Equatable {
         var differenceIdentifier: ItemID
         var isReloaded: Bool
@@ -51,19 +52,23 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
             return !isReloaded && differenceIdentifier == source.differenceIdentifier
         }
     }
-
+    
+    ///大数组
     var sections: [Section] = []
-
+    
+    ///获取所有Section对象
     var allSectionIDs: [SectionID] {
         return sections.map { $0.differenceIdentifier }
     }
-
+    
+    ///获取所有Item对象
     var allItemIDs: [ItemID] {
         return sections.lazy
             .flatMap { $0.elements }
             .map { $0.differenceIdentifier }
     }
-
+    
+    ///获取当前Section所有Item对象
     func items(in sectionID: SectionID) -> [ItemID] {
         guard let sectionIndex = sectionIndex(of: sectionID) else {
             sectionIsNotFound(sectionID)
@@ -71,11 +76,13 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
 
         return sections[sectionIndex].elements.map { $0.differenceIdentifier }
     }
-
+    
+    ///获取当前Item对象所在Section
     func section(containing itemID: ItemID) -> SectionID? {
         return itemPositionMap()[itemID]?.section.differenceIdentifier
     }
-
+    
+    ///添加Item对象到指定Section
     mutating func append(itemIDs: [ItemID], to sectionID: SectionID? = nil) {
         let index: Array<Section>.Index
 
@@ -97,7 +104,8 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
         let items = itemIDs.lazy.map(Item.init)
         sections[index].elements.append(contentsOf: items)
     }
-
+    
+    ///插入Item对象到指定Item前边
     mutating func insert(itemIDs: [ItemID], before beforeItemID: ItemID) {
         guard let itemPosition = itemPositionMap()[beforeItemID] else {
             itemIsNotFound(beforeItemID)
@@ -106,7 +114,8 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
         let items = itemIDs.lazy.map(Item.init)
         sections[itemPosition.sectionIndex].elements.insert(contentsOf: items, at: itemPosition.itemRelativeIndex)
     }
-
+    
+    ///插入Item对象到指定Item后边
     mutating func insert(itemIDs: [ItemID], after afterItemID: ItemID) {
         guard let itemPosition = itemPositionMap()[afterItemID] else {
             itemIsNotFound(afterItemID)
@@ -116,7 +125,8 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
         let items = itemIDs.lazy.map(Item.init)
         sections[itemPosition.sectionIndex].elements.insert(contentsOf: items, at: itemIndex)
     }
-
+    
+    ///删除部分指定Item
     mutating func remove(itemIDs: [ItemID]) {
         let itemPositionMap = self.itemPositionMap()
         var removeIndexSetMap = [Int: IndexSet]()
@@ -135,17 +145,20 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
             }
         }
     }
-
+    
+    ///删除所有Item---不影响Section数量
     mutating func removeAllItems() {
         for sectionIndex in sections.indices {
             sections[sectionIndex].elements.removeAll()
         }
     }
     
+    ///删除所有Item-Section
     mutating func removeAll() {
         sections.removeAll()
     }
     
+    ///移动Item对象到指定Item前边
     mutating func move(itemID: ItemID, before beforeItemID: ItemID) {
         guard let removed = remove(itemID: itemID) else {
             itemIsNotFound(itemID)
@@ -157,7 +170,8 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
 
         sections[itemPosition.sectionIndex].elements.insert(removed, at: itemPosition.itemRelativeIndex)
     }
-
+    
+    ///移动Item对象到指定Item后边
     mutating func move(itemID: ItemID, after afterItemID: ItemID) {
         guard let removed = remove(itemID: itemID) else {
             itemIsNotFound(itemID)
@@ -170,7 +184,8 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
         let itemIndex = sections[itemPosition.sectionIndex].elements.index(after: itemPosition.itemRelativeIndex)
         sections[itemPosition.sectionIndex].elements.insert(removed, at: itemIndex)
     }
-
+    
+    ///更新Item---注意Item必须是Class,不能是struct,因为在数组中struct是深拷贝,无法修改
     mutating func update(itemIDs: [ItemID]) {
         let itemPositionMap = self.itemPositionMap()
 
@@ -182,12 +197,14 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
             sections[itemPosition.sectionIndex].elements[itemPosition.itemRelativeIndex].isReloaded = true
         }
     }
-
+    
+    ///添加Section
     mutating func append(sectionIDs: [SectionID]) {
         let newSections = sectionIDs.lazy.map(Section.init)
         sections.append(contentsOf: newSections)
     }
-
+    
+    ///插入Section对象到指定Section前边
     mutating func insert(sectionIDs: [SectionID], before beforeSectionID: SectionID) {
         guard let sectionIndex = sectionIndex(of: beforeSectionID) else {
             sectionIsNotFound(beforeSectionID)
@@ -196,7 +213,8 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
         let newSections = sectionIDs.lazy.map(Section.init)
         sections.insert(contentsOf: newSections, at: sectionIndex)
     }
-
+    
+    ///插入Section对象到指定Section后边
     mutating func insert(sectionIDs: [SectionID], after afterSectionID: SectionID) {
         guard let beforeIndex = sectionIndex(of: afterSectionID) else {
             sectionIsNotFound(afterSectionID)
@@ -206,13 +224,15 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
         let newSections = sectionIDs.lazy.map(Section.init)
         sections.insert(contentsOf: newSections, at: sectionIndex)
     }
-
+    
+    ///删除所有Section,连带当前Section下的Item
     mutating func remove(sectionIDs: [SectionID]) {
         for sectionID in sectionIDs {
             remove(sectionID: sectionID)
         }
     }
-
+    
+    ///移动Section对象到指定Section前边
     mutating func move(sectionID: SectionID, before beforeSectionID: SectionID) {
         guard let removed = remove(sectionID: sectionID) else {
             sectionIsNotFound(sectionID)
@@ -224,7 +244,8 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
 
         sections.insert(removed, at: sectionIndex)
     }
-
+    
+    ///移动Section对象到指定Section后边
     mutating func move(sectionID: SectionID, after afterSectionID: SectionID) {
         guard let removed = remove(sectionID: sectionID) else {
             sectionIsNotFound(sectionID)
@@ -237,7 +258,8 @@ struct SectionStruct<SectionID: Hashable, ItemID: Hashable> {
         let sectionIndex = sections.index(after: beforeIndex)
         sections.insert(removed, at: sectionIndex)
     }
-
+    
+    ///更新section,如果需要修改Section中的数据也需要注意Section必须是Class,不能是struct,因为在数组中struct是深拷贝,无法修改,
     mutating func update(sectionIDs: [SectionID]) {
         for sectionID in sectionIDs {
             guard let sectionIndex = sectionIndex(of: sectionID) else {

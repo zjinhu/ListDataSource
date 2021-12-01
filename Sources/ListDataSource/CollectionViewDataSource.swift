@@ -9,39 +9,47 @@
 import UIKit
 
 public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
-
+    ///UICollectionView的Header/Footer类型
     public enum ReusableViewKindType {
         case sectionHeader
         case sectionFooter
     }
-    
+    ///设置Cell闭包
     public typealias CellHandle  = ( UICollectionView, IndexPath, ItemType) -> UICollectionViewCell
+    private let setCell : CellHandle
+    ///设置Header/Footer闭包
     public typealias ReusableViewHandle = (UICollectionView, ReusableViewKindType, IndexPath, SectionType) -> UICollectionReusableView?
+    private var setReusableView: ReusableViewHandle?
+    ///点击事件
     public typealias DidSelectItemHandle = (UICollectionView, IndexPath, ItemType) -> Void
+    private var didSelectItem : DidSelectItemHandle?
+    ///即将展示
     public typealias WillDisplayCellForItemAtHandle = (UICollectionView, UICollectionViewCell, IndexPath, ItemType) -> Void
-    
+    private var willDisplayCell: WillDisplayCellForItemAtHandle?
+    ///cell大小
     public typealias SetSizeForItemHandle = (UICollectionView, UICollectionViewLayout, IndexPath, ItemType) -> CGSize
+    private var setSizeForItem: SetSizeForItemHandle?
+    ///header/footer大小
     public typealias SetSizeForHeaderFooterHandle = (UICollectionView, UICollectionViewLayout, Int, SectionType) -> CGSize
-    
+    private var setSizeForHeader: SetSizeForHeaderFooterHandle?
+    private var setSizeForFooter: SetSizeForHeaderFooterHandle?
+    ///Section缩进
     public typealias SetEdgeInsetForSectionHandle = (UICollectionView, UICollectionViewLayout, Int, SectionType) -> UIEdgeInsets
+    private var setEdgeInsetForSection: SetEdgeInsetForSectionHandle?
+    ///行列间距
     public typealias SetMinimumSpacingForSectionHandle = (UICollectionView, UICollectionViewLayout, Int, SectionType) -> CGFloat
+    private var setMinimumLineSpacingForSection: SetMinimumSpacingForSectionHandle?
+    private var setMinimumInteritemSpacingForSection: SetMinimumSpacingForSectionHandle?
     
-    public let setCell : CellHandle
-    public var didSelectItem : DidSelectItemHandle?
-    public var setReusableView: ReusableViewHandle?
-    public var willDisplayCell: WillDisplayCellForItemAtHandle?
-    
-    public var setSizeForItem: SetSizeForItemHandle?
-    public var setSizeForHeader: SetSizeForHeaderFooterHandle?
-    public var setSizeForFooter: SetSizeForHeaderFooterHandle?
-    
-    public var setEdgeInsetForSection: SetEdgeInsetForSectionHandle?
-    public var setMinimumLineSpacingForSection: SetMinimumSpacingForSectionHandle?
-    public var setMinimumInteritemSpacingForSection: SetMinimumSpacingForSectionHandle?
     
     private weak var collectionView: UICollectionView?
     private let dataSource = DataSource<SectionType, ItemType>()
     
+    /// 初始化CollectionViewDataSource,默认配置数据源代理
+    /// - Parameters:
+    ///   - collectionView: UICollectionView
+    ///   - needDelegate: 是否需要代理方法
+    ///   - cellGetter: 配置cell
     public required init(_ collectionView: UICollectionView, needDelegate: Bool = false, cellGetter: @escaping CellHandle ) {
         self.setCell  = cellGetter
         self.collectionView = collectionView
@@ -51,7 +59,8 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
             collectionView.delegate = self
         }
     }
- 
+
+    //MARK: 数据源代理 UICollectionViewDataSource
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return dataSource.numberOfSections()
     }
@@ -81,7 +90,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         }
         return view
     }
-    
+    //MARK: FlowLayout代理 UICollectionViewDelegateFlowLayout
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
 
         guard let item = dataSource.itemID(for: indexPath),
@@ -135,7 +144,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         }
         return size
     }
-    
+    //MARK:  代理 UICollectionViewDelegate
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("当前位置下的ItemType数据不存在")
@@ -152,51 +161,75 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
 }
 
 extension CollectionViewDataSource{
-    
-    public func setReusableView(_ callback:@escaping ReusableViewHandle) {
+    ///设置Header/Footer闭包
+    @discardableResult
+    public func setReusableView(_ callback:@escaping ReusableViewHandle) -> Self{
         setReusableView = callback
+        return self
     }
     
-    public func didSelectItem(_ callback:@escaping DidSelectItemHandle) {
+    ///点击事件
+    @discardableResult
+    public func didSelectItem(_ callback:@escaping DidSelectItemHandle) -> Self{
         didSelectItem = callback
+        return self
     }
     
-    public func willDisplayCell(_ callback:@escaping WillDisplayCellForItemAtHandle) {
+    ///即将展示
+    @discardableResult
+    public func willDisplayCell(_ callback:@escaping WillDisplayCellForItemAtHandle) -> Self{
         willDisplayCell = callback
+        return self
     }
     
-    public func setSizeForItem(_ callback:@escaping SetSizeForItemHandle) {
+    ///cell大小
+    @discardableResult
+    public func setSizeForItem(_ callback:@escaping SetSizeForItemHandle) -> Self{
         setSizeForItem = callback
+        return self
     }
     
-    public func setSizeForHeader(_ callback:@escaping SetSizeForHeaderFooterHandle) {
+    ///header/footer大小
+    @discardableResult
+    public func setSizeForHeader(_ callback:@escaping SetSizeForHeaderFooterHandle) -> Self{
         setSizeForHeader = callback
+        return self
     }
     
-    public func setSizeForFooter(_ callback:@escaping SetSizeForHeaderFooterHandle) {
+    @discardableResult
+    public func setSizeForFooter(_ callback:@escaping SetSizeForHeaderFooterHandle) -> Self{
         setSizeForFooter = callback
+        return self
     }
     
-    public func setEdgeInsetForSection(_ callback:@escaping SetEdgeInsetForSectionHandle) {
+    ///Section缩进
+    @discardableResult
+    public func setEdgeInsetForSection(_ callback:@escaping SetEdgeInsetForSectionHandle) -> Self{
         setEdgeInsetForSection = callback
+        return self
     }
     
-    public func setMinimumLineSpacingForSection(_ callback:@escaping SetMinimumSpacingForSectionHandle) {
+    ///行列间距
+    @discardableResult
+    public func setMinimumLineSpacingForSection(_ callback:@escaping SetMinimumSpacingForSectionHandle) -> Self{
         setMinimumLineSpacingForSection = callback
+        return self
     }
     
-    public func setMinimumInteritemSpacingForSection(_ callback:@escaping SetMinimumSpacingForSectionHandle) {
+    @discardableResult
+    public func setMinimumInteritemSpacingForSection(_ callback:@escaping SetMinimumSpacingForSectionHandle) -> Self{
         setMinimumInteritemSpacingForSection = callback
+        return self
     }
-    
+    ///根据索引获取Item对象
     public func itemId(for indexPath: IndexPath) -> ItemType? {
         return dataSource.itemID(for: indexPath)
     }
-    
+    ///根据Item对象获取所在位置索引
     public func indexPath(for itemId: ItemType) -> IndexPath? {
         return dataSource.indexPath(for: itemId)
     }
-    
+    ///变更数据---相当于reload
     public func apply(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
                       animation: Bool = false,
                       completion: (() -> Void)? = nil) {
@@ -207,7 +240,7 @@ extension CollectionViewDataSource{
             collectionView.reload(using: changeset, setData: setSections)
         }, completion: completion)
     }
-    
+    ///获取当前view快照
     public func snapshot() -> DataSourceSnapshot<SectionType, ItemType> {
         return dataSource.snapshot()
     }

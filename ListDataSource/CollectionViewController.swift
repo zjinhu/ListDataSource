@@ -18,7 +18,7 @@ struct Item1: Hashable {
     var name : String
     var color : UIColor?
 }
-
+///此处可以根据cell显示不同Model不同进行多样化枚举
 enum MoreItem: Hashable {
   case one(Item1)
   case two(Item2)
@@ -32,7 +32,7 @@ class CollectionViewController: JHCollectionViewController {
     lazy var secion2 = Section(title: "2", color: .cyan)
     
     lazy var dataSource = CollectionViewDataSource<Section, MoreItem>.init(collectionView!, needDelegate: true) { collectionView, indexPath, model in
-        
+        ///根据不同的数据源类型配置不同的Cell
         switch model {
         case .one(let one):
             let cell = collectionView.dequeueReusableCell(JHCollectionViewCell.self, indexPath: indexPath)
@@ -65,7 +65,7 @@ class CollectionViewController: JHCollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        ///注册cell 和 Header/Footer
         collectionView?.registerHeaderFooterView(JHCollectionReusableView.self, kindType: .sectionHeader)
         collectionView?.registerHeaderFooterView(JHCollectionReusableView.self, kindType: .sectionFooter)
         collectionView?.alwaysBounceVertical = true
@@ -75,8 +75,15 @@ class CollectionViewController: JHCollectionViewController {
         collectionViewConfig()
     }
     
+    override func setupFlowLayout() -> UICollectionViewFlowLayout{
+        let flowLayout = UICollectionViewFlowLayout.init()
+        flowLayout.scrollDirection = UICollectionView.ScrollDirection.vertical
+        flowLayout.sectionHeadersPinToVisibleBounds = true
+        return flowLayout
+    }
     
     func collectionViewConfig(){
+        ///针对数据的配置
         shot.appendSections([secion1, secion2])
         
         shot.appendItems([.one(Item1(name: "11", color: .cyan)),
@@ -88,11 +95,11 @@ class CollectionViewController: JHCollectionViewController {
 
         dataSource.apply(shot)
         
+        ///针对样式的配置
         dataSource.didSelectItem { collectionView, indexPath, model in
             print("index,\(indexPath)")
         }
-        
-        dataSource.setEdgeInsetForSection { collectionView, layout, index, sectionModel in
+        .setEdgeInsetForSection { collectionView, layout, index, sectionModel in
             switch index {
             case 0:
                 return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -101,8 +108,7 @@ class CollectionViewController: JHCollectionViewController {
             }
             
         }
-        
-        dataSource.setSizeForItem { collectionView, layout, indexPath, model in
+        .setSizeForItem { collectionView, layout, indexPath, model in
             switch model {
             case .one( _):
                 return CGSize(width: 50, height: 50)
@@ -110,8 +116,7 @@ class CollectionViewController: JHCollectionViewController {
                 return CGSize(width: ScreenWidth, height: 60)
             }
         }
-        
-        dataSource.setMinimumLineSpacingForSection { collectionView, layout, index, sectionModel in
+        .setMinimumLineSpacingForSection { collectionView, layout, index, sectionModel in
             switch index {
             case 0:
                 return 1
@@ -119,8 +124,7 @@ class CollectionViewController: JHCollectionViewController {
                 return 1
             }
         }
-        
-        dataSource.setMinimumInteritemSpacingForSection { collectionView, layout, index, sectionModel in
+        .setMinimumInteritemSpacingForSection { collectionView, layout, index, sectionModel in
             switch index {
             case 0:
                 return 1
@@ -128,8 +132,7 @@ class CollectionViewController: JHCollectionViewController {
                 return 1
             }
         }
-
-        dataSource.setReusableView { collectionView, type, indexPath, sectionModel in
+        .setReusableView { collectionView, type, indexPath, sectionModel in
             if type == .sectionHeader{
                 let header = collectionView.dequeueReusableHeaderFooterView(JHCollectionReusableView.self, kindType: .sectionHeader, indexPath: indexPath)
                 header.subviews.forEach{ $0.removeFromSuperview(); }
@@ -150,12 +153,10 @@ class CollectionViewController: JHCollectionViewController {
                 return footer
             }
         }
-
-        dataSource.setSizeForHeader { collectionView, layout, section, sectionModel in
+        .setSizeForHeader { collectionView, layout, section, sectionModel in
             return CGSize(width: UIScreen.main.bounds.width, height: 40)
         }
-        
-        dataSource.setSizeForFooter { collectionView, layout, section, sectionModel in
+        .setSizeForFooter { collectionView, layout, section, sectionModel in
             return CGSize(width: UIScreen.main.bounds.width, height: 40)
         }
     }
