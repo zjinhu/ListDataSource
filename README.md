@@ -6,6 +6,7 @@ TableViewDataSource、CollectionViewDataSource数据源封装。
 
 我的扩充主要包括TableViewDataSource，CollectionViewDataSource对代理的回调，和对核心数据的处理上。
 喜欢原生风格的可以和iOS 13 中 Apple 引入了新的 API Diffable Data Source用法一致（一毛一样），也可以使用封装好的链式编程（省心）。DiffableDataSources主要存在的问题就是有几个代理方法未作处理，需要你自己重写，如果忘了可能会导致崩溃。
+
 DiffableDataSources和API Diffable Data Source的在搭建VC的用法我这里都做了详细的注释并实现了用法（一看就会的那种），不用再到处找资料了（因为是iOS13之后才开始支持的也没啥详细的资料，大家都没开始用呢）。所以：
 
 用法详见Demo。
