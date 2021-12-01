@@ -48,6 +48,7 @@ public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSO
             tableView.delegate = self
         }
     }
+    
     //MARK: 数据源代理 UITableViewDataSource
     public func numberOfSections(in tableView: UITableView) -> Int {
         return dataSource.numberOfSections()
@@ -116,18 +117,21 @@ public class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSO
 }
 
 extension TableViewDataSource{
+    
     ///cell大小
     @discardableResult
     public func setHeightForRow(_ callback:@escaping SetHeightForRowHandle) -> Self{
         setHeightForRow = callback
         return self
     }
+    
     ///点击事件
     @discardableResult
     public func didSelectRow(_ callback:@escaping DidSelectRowHandle) -> Self{
         didSelectRow = callback
         return self
     }
+    
     ///设置Header/Footer闭包
     @discardableResult
     public func setHeaderView(_ callback:@escaping HeaderHandle) -> Self{
@@ -140,6 +144,7 @@ extension TableViewDataSource{
         setFooterView = callback
         return self
     }
+    
     ///header/footer大小
     @discardableResult
     public func setHeightForHeader(_ callback:@escaping SetHeightForHeaderHandle) -> Self{
@@ -157,6 +162,7 @@ extension TableViewDataSource{
     public func itemId(for indexPath: IndexPath) -> ItemType? {
         return dataSource.itemID(for: indexPath)
     }
+    
     ///根据Item对象获取所在位置索引
     public func indexPath(for itemId: ItemType) -> IndexPath? {
         return dataSource.indexPath(for: itemId)
@@ -181,4 +187,33 @@ extension TableViewDataSource{
     public func snapshot() -> DataSourceSnapshot<SectionType, ItemType> {
         return dataSource.snapshot()
     }
+    
+///无数据比对方式情况下的数据操作
+//    public func apply(_ snapshot: DataSourceSnapshot<SectionType, ItemType>) {
+//        dataSource.sections = snapshot.structer.sections
+//        tableView?.reloadData()
+//    }
+//
+//    public func applyRows(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
+//                          itemIndexPaths: [IndexPath]) {
+//        dataSource.sections = snapshot.structer.sections
+//        tableView?.reloadRows(at: itemIndexPaths, with: defaultRowAnimation)
+//    }
+//
+//    public func applyRows(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
+//                          itemIDs: [ItemType]) {
+//        dataSource.sections = snapshot.structer.sections
+//        var itemIndesPaths = [IndexPath]()
+//        itemIDs.forEach { item in
+//            guard let index = indexPath(for: item) else{return}
+//            itemIndesPaths.append(index)
+//        }
+//        tableView?.reloadRows(at: itemIndesPaths, with: defaultRowAnimation)
+//    }
+//
+//    public func applySections(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
+//                              sectionIndex : Int) {
+//        dataSource.sections = snapshot.structer.sections
+//        tableView?.reloadSections(IndexSet(integer: sectionIndex), with: defaultRowAnimation)
+//    }
 }

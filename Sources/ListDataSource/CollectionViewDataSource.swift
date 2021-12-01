@@ -90,6 +90,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         }
         return view
     }
+    
     //MARK: FlowLayout代理 UICollectionViewDelegateFlowLayout
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
 
@@ -144,6 +145,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
         }
         return size
     }
+    
     //MARK:  代理 UICollectionViewDelegate
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
         guard let item = dataSource.itemID(for: indexPath) else {
@@ -161,6 +163,7 @@ public class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>
 }
 
 extension CollectionViewDataSource{
+    
     ///设置Header/Footer闭包
     @discardableResult
     public func setReusableView(_ callback:@escaping ReusableViewHandle) -> Self{
@@ -221,14 +224,17 @@ extension CollectionViewDataSource{
         setMinimumInteritemSpacingForSection = callback
         return self
     }
+    
     ///根据索引获取Item对象
     public func itemId(for indexPath: IndexPath) -> ItemType? {
         return dataSource.itemID(for: indexPath)
     }
+    
     ///根据Item对象获取所在位置索引
     public func indexPath(for itemId: ItemType) -> IndexPath? {
         return dataSource.indexPath(for: itemId)
     }
+    
     ///变更数据---相当于reload
     public func apply(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
                       animation: Bool = false,
@@ -240,8 +246,38 @@ extension CollectionViewDataSource{
             collectionView.reload(using: changeset, setData: setSections)
         }, completion: completion)
     }
+    
     ///获取当前view快照
     public func snapshot() -> DataSourceSnapshot<SectionType, ItemType> {
         return dataSource.snapshot()
     }
+    
+///无数据比对方式情况下的数据操作
+//    public func apply(_ snapshot: DataSourceSnapshot<SectionType, ItemType>) {
+//        dataSource.sections = snapshot.structer.sections
+//        collectionView?.reloadData()
+//    }
+//    
+//    public func applyRows(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
+//                          itemIndexPaths: [IndexPath]) {
+//        dataSource.sections = snapshot.structer.sections
+//        collectionView?.reloadItems(at: itemIndexPaths)
+//    }
+//    
+//    public func applyRows(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
+//                          itemIDs: [ItemType]) {
+//        dataSource.sections = snapshot.structer.sections
+//        var itemIndesPaths = [IndexPath]()
+//        itemIDs.forEach { item in
+//            guard let index = indexPath(for: item) else{return}
+//            itemIndesPaths.append(index)
+//        }
+//        collectionView?.reloadItems(at: itemIndesPaths)
+//    }
+//    
+//    public func applySections(_ snapshot: DataSourceSnapshot<SectionType, ItemType>,
+//                              sectionIndex : Int) {
+//        dataSource.sections = snapshot.structer.sections
+//        collectionView?.reloadSections(IndexSet(integer: sectionIndex))
+//    }
 }
