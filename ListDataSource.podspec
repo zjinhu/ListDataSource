@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "ListDataSource"
-  s.version      = "0.2.4"
+  s.version      = "0.2.5"
   s.summary      = "A short description of ListDataSource."
 
   s.homepage         = 'https://github.com/jackiehu/ListDataSource'

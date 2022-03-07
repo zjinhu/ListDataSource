@@ -24,9 +24,13 @@ open class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>: 
     ///点击事件
     public typealias DidSelectItemHandle = (UICollectionView, IndexPath, ItemType) -> Void
     private var didSelectItem : DidSelectItemHandle?
-    public typealias DeSelectItemHandle = (UICollectionView, IndexPath, ItemType) -> Void
-    private var deSelectItem : DeSelectItemHandle?
-
+    public typealias DeselectItemHandle = (UICollectionView, IndexPath, ItemType) -> Void
+    private var deSelectItem : DeselectItemHandle?
+    public typealias ShouldSelectItemHandle = (UICollectionView, IndexPath, ItemType) -> Bool
+    private var shouldSelectItem : ShouldSelectItemHandle?
+    public typealias ShouldDeselectItemHandle = (UICollectionView, IndexPath, ItemType) -> Bool
+    private var shouldDeselectItem : ShouldDeselectItemHandle?
+    
     ///即将展示
     public typealias WillDisplayCellForItemAtHandle = (UICollectionView, UICollectionViewCell, IndexPath, ItemType) -> Void
     private var willDisplayCell: WillDisplayCellForItemAtHandle?
@@ -165,6 +169,21 @@ open class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>: 
         deSelectItem?(collectionView, indexPath, item)
     }
     
+    open func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        guard let item = dataSource.itemID(for: indexPath) else {
+            fatalError("当前位置下的ItemType数据不存在")
+        }
+        return shouldSelectItem?(collectionView, indexPath, item) ?? true
+    }
+    
+    open func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        guard let item = dataSource.itemID(for: indexPath) else {
+            fatalError("当前位置下的ItemType数据不存在")
+        }
+        return shouldDeselectItem?(collectionView, indexPath, item) ?? true
+    }
+    
+    
     open func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath){
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("当前位置下的ItemType数据不存在")
@@ -190,8 +209,20 @@ extension CollectionViewDataSource{
     }
     
     @discardableResult
-    public func deSelectItem(_ callback:@escaping DeSelectItemHandle) -> Self{
+    public func deSelectItem(_ callback:@escaping DeselectItemHandle) -> Self{
         deSelectItem = callback
+        return self
+    }
+    
+    @discardableResult
+    public func shouldSelectItem(_ callback:@escaping ShouldSelectItemHandle) -> Self{
+        shouldSelectItem = callback
+        return self
+    }
+    
+    @discardableResult
+    public func shouldDeselectItem(_ callback:@escaping ShouldDeselectItemHandle) -> Self{
+        shouldDeselectItem = callback
         return self
     }
     
