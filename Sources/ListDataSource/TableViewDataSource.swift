@@ -17,6 +17,8 @@ open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObj
     ///点击事件
     public typealias DidSelectRowHandle = (UITableView, IndexPath, ItemType) -> Void
     private var didSelectRow : DidSelectRowHandle?
+    public typealias DeSelectRowHandle = (UITableView, IndexPath, ItemType) -> Void
+    private var deSelectRow : DeSelectRowHandle?
     ///cell大小
     public typealias SetHeightForRowHandle = (UITableView, IndexPath, ItemType) -> CGFloat
     private var setHeightForRow : SetHeightForRowHandle?
@@ -114,6 +116,13 @@ open class TableViewDataSource<SectionType: Hashable, ItemType: Hashable>: NSObj
         }
         didSelectRow?(tableView, indexPath, item)
     }
+    
+    open func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        guard let item = dataSource.itemID(for: indexPath) else {
+            fatalError("当前位置下的ItemType数据不存在")
+        }
+        deSelectRow?(tableView, indexPath, item)
+    }
 }
 
 extension TableViewDataSource{
@@ -129,6 +138,11 @@ extension TableViewDataSource{
     @discardableResult
     public func didSelectRow(_ callback:@escaping DidSelectRowHandle) -> Self{
         didSelectRow = callback
+        return self
+    }
+    @discardableResult
+    public func deSelectRow(_ callback:@escaping DeSelectRowHandle) -> Self{
+        deSelectRow = callback
         return self
     }
     

@@ -20,9 +20,13 @@ open class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>: 
     ///设置Header/Footer闭包
     public typealias ReusableViewHandle = (UICollectionView, ReusableViewKindType, IndexPath, SectionType) -> UICollectionReusableView?
     private var setReusableView: ReusableViewHandle?
+    
     ///点击事件
     public typealias DidSelectItemHandle = (UICollectionView, IndexPath, ItemType) -> Void
     private var didSelectItem : DidSelectItemHandle?
+    public typealias DeSelectItemHandle = (UICollectionView, IndexPath, ItemType) -> Void
+    private var deSelectItem : DeSelectItemHandle?
+
     ///即将展示
     public typealias WillDisplayCellForItemAtHandle = (UICollectionView, UICollectionViewCell, IndexPath, ItemType) -> Void
     private var willDisplayCell: WillDisplayCellForItemAtHandle?
@@ -154,6 +158,13 @@ open class CollectionViewDataSource<SectionType: Hashable, ItemType: Hashable>: 
         didSelectItem?(collectionView, indexPath, item)
     }
     
+    open func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let item = dataSource.itemID(for: indexPath) else {
+            fatalError("当前位置下的ItemType数据不存在")
+        }
+        deSelectItem?(collectionView, indexPath, item)
+    }
+    
     open func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath){
         guard let item = dataSource.itemID(for: indexPath) else {
             fatalError("当前位置下的ItemType数据不存在")
@@ -175,6 +186,12 @@ extension CollectionViewDataSource{
     @discardableResult
     public func didSelectItem(_ callback:@escaping DidSelectItemHandle) -> Self{
         didSelectItem = callback
+        return self
+    }
+    
+    @discardableResult
+    public func deSelectItem(_ callback:@escaping DeSelectItemHandle) -> Self{
+        deSelectItem = callback
         return self
     }
     
