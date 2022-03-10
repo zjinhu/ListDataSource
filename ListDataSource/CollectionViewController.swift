@@ -33,6 +33,7 @@ class CollectionViewController: JHCollectionViewController {
     
     lazy var dataSource = CollectionViewDataSource<Section, MoreItem>.init(collectionView!, needDelegate: true) { collectionView, indexPath, model in
         ///根据不同的数据源类型配置不同的Cell
+        
         switch model {
         case .one(let one):
             let cell = collectionView.dequeueReusableCell(JHCollectionViewCell.self, indexPath: indexPath)
