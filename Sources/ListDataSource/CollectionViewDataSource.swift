@@ -278,8 +278,8 @@ extension CollectionViewDataSource{
         return dataSource.itemID(for: indexPath)
     }
     
-    public func sectionId(for indexPath: IndexPath) -> SectionType? {
-        return dataSource.sectionID(for: indexPath.section)
+    public func sectionId(for section: Int) -> SectionType? {
+        return dataSource.sectionID(for: section)
     }
     
     ///根据Item对象获取所在位置索引
