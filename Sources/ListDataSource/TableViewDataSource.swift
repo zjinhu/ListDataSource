@@ -177,6 +177,10 @@ extension TableViewDataSource{
         return dataSource.itemID(for: indexPath)
     }
     
+    public func sectionId(for indexPath: IndexPath) -> SectionType? {
+        return dataSource.sectionID(for: indexPath.section)
+    }
+    
     ///根据Item对象获取所在位置索引
     public func indexPath(for itemId: ItemType) -> IndexPath? {
         return dataSource.indexPath(for: itemId)
