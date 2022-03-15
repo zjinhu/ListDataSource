@@ -1,43 +1,41 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "DifferenceKit",
-        "repositoryURL": "https://github.com/ra1028/DifferenceKit",
-        "state": {
-          "branch": null,
-          "revision": "62745d7780deef4a023a792a1f8f763ec7bf9705",
-          "version": "1.2.0"
-        }
-      },
-      {
-        "package": "SnapKit",
-        "repositoryURL": "https://github.com/SnapKit/SnapKit.git",
-        "state": {
-          "branch": null,
-          "revision": "d458564516e5676af9c70b4f4b2a9178294f1bc6",
-          "version": "5.0.1"
-        }
-      },
-      {
-        "package": "SwiftBrick",
-        "repositoryURL": "https://github.com/jackiehu/SwiftBrick.git",
-        "state": {
-          "branch": null,
-          "revision": "38c39de6eed703f1560927cd884e89233af3d089",
-          "version": "1.8.8"
-        }
-      },
-      {
-        "package": "SwiftMediator",
-        "repositoryURL": "https://github.com/jackiehu/SwiftMediator.git",
-        "state": {
-          "branch": null,
-          "revision": "8d078c83ca6ab62ee6b0ae786d0160445da6315f",
-          "version": "1.1.0"
-        }
+  "pins" : [
+    {
+      "identity" : "differencekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ra1028/DifferenceKit",
+      "state" : {
+        "revision" : "62745d7780deef4a023a792a1f8f763ec7bf9705",
+        "version" : "1.2.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit.git",
+      "state" : {
+        "revision" : "d458564516e5676af9c70b4f4b2a9178294f1bc6",
+        "version" : "5.0.1"
+      }
+    },
+    {
+      "identity" : "swiftbrick",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jackiehu/SwiftBrick.git",
+      "state" : {
+        "revision" : "6493a51fcc327b53d60b3da2aa48c3542373bccc",
+        "version" : "1.9.2"
+      }
+    },
+    {
+      "identity" : "swiftmediator",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jackiehu/SwiftMediator.git",
+      "state" : {
+        "revision" : "5288f766480d533b8e577b19316c046a2fb0c323",
+        "version" : "1.1.2"
+      }
+    }
+  ],
+  "version" : 2
 }
